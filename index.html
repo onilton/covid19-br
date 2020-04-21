@@ -1,12 +1,98 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Page Title</title>
+    <title>Page Title</title>
+
+    <link rel="stylesheet" media="all" href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css">
+    <link rel="stylesheet" media="all" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" media="all" href="style.css">
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
+    <script src="https://unpkg.com/deck.gl@7.3.15/dist.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/lodash/4.17.2/lodash.min.js"></script>
+    <script src="https://unpkg.com/percentile@1.2.3/lib/index.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="index.js"></script>
 </head>
+
 <body>
+    <div id="tooltip"></div>
+    <div id="control-panel">
+        <form>
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" id="removeZeroes" type="checkbox"></input>
+                    <label class="custom-control-label" class="form-check-label" for="removeZeroes">Esconder munícipios sem casos/mortes</label>
+                </div>
+            </div>
+            <div id="barMetric" class="form-group">
+                <label class="form-check-label">Bar metric: </label>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio1"
+                        value="confirmed" checked>
+                    <label class="custom-control-label" for="inlineRadio1">Casos</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio2" value="deaths">
+                    <label class="custom-control-label" for="inlineRadio2">Mortes</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio3"
+                        value="confirmed_per_100k_inhabitants">
+                    <label class="custom-control-label" for="inlineRadio3">Casos / 100 mil</label>
+                </div>
+            </div>
+            <div id="colorMetric" class="form-group">
+                <label class="form-check-label">Color metric: </label>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric1"
+                        value="confirmed" checked>
+                    <label class="custom-control-label" for="inlineColorMetric1">Casos</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric2"
+                        value="deaths">
+                    <label class="custom-control-label" for="inlineColorMetric2">Mortes</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric3"
+                        value="confirmed_per_100k_inhabitants">
+                    <label class="custom-control-label" for="inlineColorMetric3">Casos / 100 mil</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Days from first case</label>
+                <input id="days" class="custom-range" type="range" min="0" max="100" step="1" value="0"></input>
+                <span id="days-value"></span>
+            </div>
 
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
+            <p>
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAdvanced" aria-expanded="false" aria-controls="collapseAdvanced">
+                  Advanced
+                </button>
+              </p>
+              <div class="collapse" id="collapseAdvanced">
+                <div class="card card-body" style="max-width: 450px">
+                    <div>
+                        <label>Elevation Multiplier</label>
+                        <input id="coverage" type="range" min="0" max="1" step="0.1" value="1"></input>
+                        <span id="coverage-value"></span>
+                    </div>
+                    <div>
+                        <label>Upper Percentile</label>
+                        <input id="upperPercentile" type="range" min="90" max="100" step="1" value="100"></input>
+                        <span id="upperPercentile-value"></span>
+                    </div>
 
+                </div>
+              </div>
+
+
+        </form>
+
+    </div>
 </body>
+
 </html>

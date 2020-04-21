@@ -1,0 +1,35 @@
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+
+.deck-tooltip {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  position: absolute;
+  padding: 4px;
+  margin: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  max-width: 300px;
+  font-size: 12px;
+  z-index: 9;
+  pointer-events: none;
+}
+
+#control-panel {
+  font-family: Helvetica, Arial, sans-serif;
+  position: absolute;
+  background: #fff;
+  top: 0;
+  left: 0;
+  margin: 12px;
+  padding: 20px;
+  z-index: 1;
+}
+
+/* poor man boostrap */
+.form-check-inline {
+  display: inline;
+}
