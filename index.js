@@ -387,12 +387,12 @@ async function doIt() {
         if (object) {
             const data = groupedAllCities[object.properties.codarea][0];
 
+            //   Idx: ${colorScale(data[metric.name], true)} <br>
             return {
                 html: `
                     <b>${data.city} / ${data.state}</b> <br><br>
                     Mortes: ${data.deaths} <br>
                     Casos confirmados: ${data.confirmed} <br>
-                    Idx: ${colorScale(data[metric.name], true)} <br>
                     Casos a cada 100 mil habitantes: ${data.confirmed_per_100k_inhabitants} <br>
                     Data: ${data.date} <br>
                     <br>
