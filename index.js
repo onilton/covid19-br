@@ -1,4 +1,4 @@
-const OPTIONS = ['removeZeroes', 'barMetric', 'colorMetric', 'days', 'coverage', 'upperPercentile'];
+const OPTIONS = ['removeZeroes', 'barMetric', 'colorMetric', 'days', 'elevationMultiplier', 'upperPercentile'];
 
 var stateIdByUF = { "RO": 11, "AC": 12, "AM": 13, "RR": 14, "PA": 15, "AP": 16, "TO": 17, "MA": 21, "PI": 22, "CE": 23, "RN": 24, "PB": 25, "PE": 26, "AL": 27, "SE": 28, "BA": 29, "MG": 31, "ES": 32, "RJ": 33, "SP": 35, "PR": 41, "SC": 42, "RS": 43, "MS": 50, "MT": 51, "GO": 52, "DF": 53 }
 
@@ -275,6 +275,8 @@ async function doIt() {
         var groupedCovidCities = await fetchCovidCities(stateUFs, dateStr)
 
 
+
+
         groupedAllCities = JSON.parse(JSON.stringify(originalGroupedAllCities));
 
         Object.keys(originalGroupedAllCities).map(function (key, index) {
@@ -290,6 +292,8 @@ async function doIt() {
 
         metric = metrics[options.barMetric]
         const colorMetric = metrics[options.colorMetric]
+
+        const elevationMultiplier = options.elevationMultiplier >= 0 ? options.elevationMultiplier  : metrics[metric.name].elevationMultiplier
         // console.log(metric)
 
         const geojsonLayer = new deck.GeoJsonLayer({
@@ -312,7 +316,7 @@ async function doIt() {
                 // console.log(f.properties.codarea);
                 // console.log( groupedAllCities[f.properties.codarea][0].deaths);
                 const metricValue = groupedAllCities[f.properties.codarea][0][metric.name]
-                const elevationMultiplier = metrics[metric.name].elevationMultiplier
+                // const elevationMultiplier = metrics[metric.name].elevationMultiplier
                 // console.log(metricValue);
                 return metricValue * elevationMultiplier + Math.ceil(Math.max(1, metricValue)) * 1000
             },
