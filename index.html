@@ -66,7 +66,18 @@
                 <label>Days from first case:&nbsp;</label><span id="days-value"></span>
                 <input id="days" class="custom-range" type="range" min="0" max="100" step="1" value="0"></input>
             </div>
+            <div class="form-group form-inline justify-content-center">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button id="previous-day" type="button" class="btn btn-primary day-button">&laquo;</button>
+                    </div>
+                    <input id="current-day" class="form-control" type="text" value="2020-03-04" readonly>
+                    <div class="input-group-append">
+                        <button id="next-day" type="button" class="btn btn-primary day-button">&raquo;</button>
+                    </div>
+                </div>
 
+            </div>
             <p>
                 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAdvanced" aria-expanded="false" aria-controls="collapseAdvanced">
                   Advanced

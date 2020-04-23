@@ -215,6 +215,16 @@ async function doIt() {
 
     document.getElementById('days').value = daysFromPandemicStart() - 1;
 
+    document.getElementById('next-day').onclick = (ev) => {
+        document.getElementById('days').value = parseInt(document.getElementById('days').value) + 1;
+        document.getElementById('days').oninput();
+    }
+
+    document.getElementById('previous-day').onclick = (ev) => {
+        document.getElementById('days').value = parseInt(document.getElementById('days').value) - 1;
+        document.getElementById('days').oninput();
+    }
+
 
     OPTIONS.forEach(key => {
         document.getElementById(key).oninput = debounced(300, renderLayer);
@@ -225,7 +235,6 @@ async function doIt() {
         }
         //document.getElementByName(key).oninput = renderLayer;
     });
-
 
 
     await renderLayer();
@@ -269,12 +278,12 @@ async function doIt() {
         const date = new Date(2020, 02 - 1, 26);
         date.setDate(date.getDate() + options.days);
         const dateStr = date.toISOString().slice(0, 10);
+
+        document.getElementById("current-day").value = dateStr
         console.log(options.days)
         console.log(dateStr)
 
         var groupedCovidCities = await fetchCovidCities(stateUFs, dateStr)
-
-
 
 
         groupedAllCities = JSON.parse(JSON.stringify(originalGroupedAllCities));

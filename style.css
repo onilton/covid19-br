@@ -33,3 +33,12 @@ body {
 .form-check-inline {
   display: inline;
 }
+
+.day-button {
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+}
+
+#current-day {
+  text-align: center;
+}
