@@ -28,8 +28,8 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-      with:
-        ref: gh-pages
+    #  with:
+    #    ref: gh-pages
 
     # Runs a single command using the runners shell
     - name: Run a one-line script
@@ -50,4 +50,4 @@ jobs:
         add: "caso_full.csv"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_REF: refs/heads/gh-pages
+      #  GITHUB_REF: refs/heads/gh-pages
