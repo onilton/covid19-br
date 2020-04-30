@@ -6,7 +6,7 @@ name: CI
 # events but only for the master branch
 on:
   schedule:
-    - cron: "25 10,16,20,23 * * *"
+    - cron: "50 10,16,20,23 * * *"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -33,7 +33,8 @@ jobs:
         echo Add other actions to build,
         echo test, and deploy your project.
     - name: Commit changes
-      uses: EndBug/add-and-commit@v4
+      # uses: EndBug/add-and-commit@v4 see https://github.com/EndBug/add-and-commit/issues/27
+      uses: RobinWijnant/add-and-commit@master
       with:
         message: "Updated caso_full.csve"
         add: "caso_full.csv"
