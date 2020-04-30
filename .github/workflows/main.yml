@@ -6,7 +6,7 @@ name: CI
 # events but only for the master branch
 on:
   schedule:
-    - cron: "51 10,17,20,23 * * *"
+    - cron: "53 10,17,20,23 * * *"
 
 env:
   GITHUB_REF: refs/heads/gh-pages
@@ -33,7 +33,7 @@ jobs:
     - name: Download new file
       run: |
         wget 'https://data.brasil.io/dataset/covid19/caso_full.csv.gz' -O caso_full.csv.gz
-        gunzip caso_full.csv.gz
+        gunzip -f caso_full.csv.gz
         echo Add other actions to build,
         echo test, and deploy your project.
     - name: Commit changes
