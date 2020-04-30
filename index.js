@@ -69,8 +69,41 @@ function daysFromPandemicStart() {
 
 }
 
-// Get covide data
+function loadCSV(file) {
+    return new Promise(function (resolve, reject) {
+        d3.csv(file, function(error, request) {
+            if(error) {
+               reject(error);
+            } else {
+               resolve(request);
+            }
+         });
+     });
+ }
+
+ let csvCovidData = null
+
+ // Get covid data
+async function fetchCovidCsvData() {
+    if (csvCovidData == null) {
+       const localCsvCovidData = await loadCSV("https://raw.githubusercontent.com/onilton/covid19-br/master/caso_full.csv")
+       csvCovidData = _.groupBy(localCsvCovidData, i => i.date)
+    }
+
+    return csvCovidData;
+}
+
+// Get covid data
 async function fetchCovidResults(stateUF, date) {
+    const baseData = await fetchCovidCsvData();
+    const stateData = baseData[date].filter(i => i.state == stateUF)
+    console.log(stateUF)
+    console.log(stateData)
+    return stateData;
+}
+
+// Get covid data
+async function oldFetchCovidResults(stateUF, date) {
     // console.log("start fetch c")
     let url = "https://brasil.io/api/dataset/covid19/caso/data?state=" + stateUF
     if (date) {
@@ -101,9 +134,7 @@ async function fetchCovidCities(stateUFs, dateStr) {
         covidCitiesCache[stateUFs] = {}
     }
 
-
     covidCitiesCache[stateUFs][dateStr] = groupedCovidCities;
-
 
     return groupedCovidCities;
 }
@@ -163,9 +194,9 @@ var groupedAllCities = {}
 async function doIt() {
     // confirmed | deaths | confirmed_per_100k_inhabitants
     const metrics = {
-        confirmed: { name: "confirmed", label: "Casos confirmados", elevationMultiplier: 500 },
-        deaths: { name: "deaths", label: "Mortes", elevationMultiplier: 1000 },
-        confirmed_per_100k_inhabitants: { name: "confirmed_per_100k_inhabitants", label: "Conf. proporcional", elevationMultiplier: 3000 }
+        confirmed: { name: "last_available_confirmed", label: "Casos confirmados", elevationMultiplier: 500 },
+        deaths: { name: "last_available_deaths", label: "Mortes", elevationMultiplier: 1000 },
+        confirmed_per_100k_inhabitants: { name: "last_available_confirmed_per_100k_inhabitants", label: "Conf. proporcional", elevationMultiplier: 3000 }
     }
     // elevation multiplier
 
@@ -214,7 +245,6 @@ async function doIt() {
     document.getElementById('days').max = daysFromPandemicStart();
 
     document.getElementById('days').value = daysFromPandemicStart() - 1;
-
     document.getElementById('next-day').onclick = (ev) => {
         document.getElementById('days').value = parseInt(document.getElementById('days').value) + 1;
         document.getElementById('days').oninput();
@@ -302,7 +332,7 @@ async function doIt() {
         metric = metrics[options.barMetric]
         const colorMetric = metrics[options.colorMetric]
 
-        const elevationMultiplier = options.elevationMultiplier >= 0 ? options.elevationMultiplier  : metrics[metric.name].elevationMultiplier
+        const elevationMultiplier = options.elevationMultiplier >= 0 ? options.elevationMultiplier  : metric.elevationMultiplier
         // console.log(metric)
 
         const geojsonLayer = new deck.GeoJsonLayer({
@@ -349,9 +379,9 @@ async function doIt() {
             },
             extensions: [new DataFilterExtension({ filterSize: 1 })],
             getFilterValue: f => {
+                const metricValue = groupedAllCities[f.properties.codarea][0][metric.name] || 0
 
-                const metricValue = groupedAllCities[f.properties.codarea][0][metric.name]
-                return metricValue
+                return parseInt(metricValue)
 
             },
             filterRange: filterRange,
@@ -372,7 +402,11 @@ async function doIt() {
     //     }
     //     return COLOR_SCALE[i] || COLOR_SCALE[COLOR_SCALE.length - 1];
     // }
-    function colorScale(locMetric, getIdx) {
+    function colorScale(outLocMetric, getIdx) {
+        let locMetric = 0;
+        if (outLocMetric) {
+            locMetric = outLocMetric
+        }
         // console.log(f.properties.codarea);
         // const locMetric = groupedAllCities[x][0][metric.name]
         // console.log(locMetric);
@@ -404,10 +438,10 @@ async function doIt() {
             return {
                 html: `
                     <b>${data.city} / ${data.state}</b> <br><br>
-                    Mortes: ${data.deaths} <br>
-                    Casos confirmados: ${data.confirmed} <br>
-                    Casos a cada 100 mil habitantes: ${data.confirmed_per_100k_inhabitants} <br>
-                    Data: ${data.date} <br>
+                    Mortes: ${data.last_available_deaths || 0} <br>
+                    Casos confirmados: ${data.last_available_confirmed || 0} <br>
+                    Casos a cada 100 mil habitantes: ${data.last_available_confirmed_per_100k_inhabitants || 0 } <br>
+                    Data: ${data.last_available_date || ''} <br>
                     <br>
                     <b>Clique</b> para mais informações.
             `};
