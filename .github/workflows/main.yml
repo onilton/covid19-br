@@ -6,7 +6,10 @@ name: CI
 # events but only for the master branch
 on:
   schedule:
-    - cron: "08 10,17,20,23 * * *"
+    - cron: "51 10,17,20,23 * * *"
+
+env:
+  GITHUB_REF: refs/heads/gh-pages
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -19,6 +22,8 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
+      with:
+        ref: gh-pages
 
     # Runs a single command using the runners shell
     - name: Run a one-line script
@@ -27,7 +32,8 @@ jobs:
     # Runs a set of commands using the runners shell
     - name: Download new file
       run: |
-        wget 'https://brasil.io/dataset/covid19/caso/?format=csv' -O caso_full.csv
+        wget 'https://data.brasil.io/dataset/covid19/caso_full.csv.gz' -O caso_full.csv.gz
+        gunzip caso_full.csv.gz
         echo Add other actions to build,
         echo test, and deploy your project.
     - name: Commit changes
@@ -38,3 +44,4 @@ jobs:
         add: "caso_full.csv"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_REF: refs/heads/gh-pages
