@@ -6,7 +6,7 @@ name: CI
 # events but only for the master branch
 on:
   schedule:
-    - cron: "0 10,16,20,23 * * *"
+    - cron: "21 10,16,20,23 * * *"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -27,11 +27,15 @@ jobs:
       run: echo Hello, world!
 
     # Runs a set of commands using the runners shell
-    - name: Run a multi-line script
+    - name: Download new file
       run: |
         wget 'https://brasil.io/dataset/covid19/caso/?format=csv' -O caso_full.csv
-        git add caso_full.csv
-        git commit -m "Updated caso_full.csv"
-        git push
         echo Add other actions to build,
         echo test, and deploy your project.
+    - name: Commit changes
+      uses: EndBug/add-and-commit@v4
+      with:
+        message: "Updated caso_full.csve"
+        add: "caso_full.csv"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
