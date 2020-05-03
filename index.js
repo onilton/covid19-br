@@ -32,11 +32,9 @@ const INFERNO_COLOR_SCALE =
 
 const YlOrRdLog50_25 = ["#ffffcc", "#fee792", "#fecc67", "#febf59", "#fea645", "#fe9a40", "#fd8d3c", "#fd7b33", "#fd662d", "#fd662d", "#fc4e2a", "#fc4e2a", "#f44025", "#f44025", "#eb3020", "#eb3020", "#e31a1c", "#e31a1c", "#e31a1c", "#d71121", "#d71121", "#d71121", "#ca0724", "#ca0724", "#ca0724", "#ca0724", "#bd0026", "#bd0026", "#bd0026", "#bd0026", "#bd0026", "#a90027", "#a90027", "#a90027", "#a90027", "#a90027", "#940027", "#940027", "#940027", "#940027", "#940027", "#940027", "#800026", "#800026", "#800026", "#800026", "#800026", "#800026", "#800026", "#800026"].map(hexToRgb);
 
+// Make first color white
+YlOrRdLog50_25[0] = hexToRgb("#ffffff");
 
-const COLOR_SCALE = YlOrRdLog50_25
-
-
-console.log(COLOR_SCALE);
 
 
 const COLOR_SCALE2 = [
@@ -57,6 +55,41 @@ const COLOR_SCALE2 = [
     [189, 0, 38],
     [128, 0, 38]
 ];
+
+const Reds = ["#fff5f0","#fee0d2","#fcbba1","#fc9272","#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"].map(hexToRgb);
+// Reds[0] = Reds[0].concat([100])
+
+const PuRd = ["#f7f4f9","#e7e1ef","#d4b9da","#c994c7","#df65b0","#e7298a","#ce1256","#980043","#67001f"].map(hexToRgb);
+PuRd[0] =  PuRd[0].concat([50])
+
+const YlOrRd = [
+    [128,0,38],
+    [189,0,38],
+    [227,26,28],
+    [252,78,42],
+    [253,141,60],
+    [254,178,76],
+    [254,217,118],
+    [255,237,160],
+    [255,255,204]
+].reverse();
+
+// const RdOpacity = [
+//     [128,0,38, 255],
+//     [128,0,38, 224],
+//     [128,0,38, 192],
+//     [128,0,38, 160],
+//     [128,0,38, 128],
+//     [128,0,38, 96],
+//     [128,0,38, 64],
+//     [128,0,38, 32],
+//     [128,0,38, 0]
+// ].reverse();
+
+const COLOR_SCALE = PuRd
+
+
+console.log(COLOR_SCALE);
 
 function pandemicStart() {
     return new Date(2020, 02 - 1, 26);
