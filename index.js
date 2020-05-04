@@ -519,16 +519,25 @@ async function doIt() {
             const data = groupedAllCities[object.properties.codarea][0];
 
             //   Idx: ${colorScale(data[metric.name], true)} <br>
+            // <b></b> <br><br>
+            // <a href="#" class="btn btn-primary">Go somewhere</a>
             return {
                 html: `
-                    Idx: ${logColorScale(data[colorMetric.name], maxMetricValue, true)} / ${maxMetricValue - 1} <br>
-                    <b>${data.city} / ${data.state}</b> <br><br>
-                    Mortes: ${data.last_available_deaths || 0} <br>
-                    Casos confirmados: ${data.last_available_confirmed || 0} <br>
-                    Casos a cada 100 mil habitantes: ${data.last_available_confirmed_per_100k_inhabitants || 0 } <br>
-                    Data: ${data.last_available_date || ''} <br>
-                    <br>
-                    <b>Clique</b> para mais informações.
+                <div class="card text-body">
+                    <div class="card-header">
+                        <b> ${data.city} / ${data.state} </b>
+                    </div>
+                    <div class="card-body">
+                        Idx: ${logColorScale(data[colorMetric.name], maxMetricValue, true)} / ${COLOR_SCALE.length - 1} <br>
+                        Mortes: ${data.last_available_deaths || 0} <br>
+                        Casos confirmados: ${data.last_available_confirmed || 0} <br>
+                        Casos a cada 100 mil habitantes: ${data.last_available_confirmed_per_100k_inhabitants || 0 } <br>
+                        Data: ${data.last_available_date || ''} <br>
+                        <br>
+                        <b>Clique</b> para mais informações.
+                    </div>
+                </div>
+
             `};
         }
         //     return object && `
