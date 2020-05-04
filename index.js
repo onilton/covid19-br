@@ -310,22 +310,17 @@ async function doIt() {
     async function renderLayer() {
         console.log("WILL RENDER LAYER")
 
-        const options = { removeZeroes: false };
+        const options = {};
 
         OPTIONS.forEach(key => {
-            const element = document.getElementById(key)
-            // console.log(key);
-            // console.log(element);
+            const form = document.getElementById('control-form')
+            const element = form.elements[key]
 
-            console.log(element.type);
             let value;
             if (element.type == 'checkbox') {
-                //console.log(element.checked);
                 value = element.checked;
-            } else if (element.type === undefined) {
-                value = Array.from(document.getElementsByName(key)).find(r => r.checked).value;
             } else {
-                value = + element.value;
+                value = element.value;
             }
 
             const screenValue = document.getElementById(key + '-value')
@@ -333,18 +328,13 @@ async function doIt() {
                 screenValue.innerHTML = value;
             }
 
-
-
-            //document.getElementById(key + '-value').innerHTML = value;
             options[key] = value;
-
-            // console.log(value);
         });
 
         console.log(options)
 
         const date = new Date(2020, 02 - 1, 26);
-        date.setDate(date.getDate() + options.days);
+        date.setDate(date.getDate() + parseInt(options.days));
         const dateStr = date.toISOString().slice(0, 10);
 
         document.getElementById("current-day").value = dateStr
