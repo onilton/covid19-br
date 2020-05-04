@@ -304,12 +304,40 @@ async function doIt() {
         //document.getElementByName(key).oninput = renderLayer;
     });
 
+    function getHashQueryString() {
+        return new URLSearchParams(window.location.hash.substr(1))
+    }
 
-    await renderLayer();
+    let defaultValuesForOptions;
+    function setHashQueryString(key, value) {
+        const params = new URLSearchParams(window.location.hash.substr(1));
+        if (value == defaultValuesForOptions[key]) {
+            params.delete(key);
+        } else {
+            params.set(key, value);
+        }
+        window.location.hash = '#' + params.toString();
+    }
 
-    async function renderLayer() {
-        console.log("WILL RENDER LAYER")
+    window.addEventListener("hashchange", () => {
+        const params = getHashQueryString();
+        const dark = params.get("dark");
 
+        const body = document.getElementsByTagName("body")[0];
+        if (dark == 'true') {
+            body.className="bootstrap-dark";
+        } else {
+            body.className="bootstrap";
+        }
+
+        setOptionsInForm(Object.assign({},defaultValuesForOptions, getOptionsFromHash()));
+    }, false);
+
+    function getOptionsFromHash() {
+        return Object.fromEntries(getHashQueryString());
+    }
+
+    function getOptionsFromForm() {
         const options = {};
 
         OPTIONS.forEach(key => {
@@ -329,6 +357,44 @@ async function doIt() {
             }
 
             options[key] = value;
+        });
+
+        return options;
+    }
+
+    function setOptionsInForm(options) {
+        Object.entries(options).forEach(([key, value]) => {
+
+            const form = document.getElementById('control-form')
+            const element = form.elements[key]
+
+            if (element && element.type == 'checkbox') {
+                element.checked = value;
+            } else if (element) {
+                element.value = value;
+            }
+
+            const screenValue = document.getElementById(key + '-value')
+            if (screenValue) {
+                screenValue.innerHTML = value;
+            }
+        });
+
+        return options;
+    }
+
+    defaultValuesForOptions = getOptionsFromForm();
+
+    setOptionsInForm(getOptionsFromHash())
+
+    await renderLayer();
+
+    async function renderLayer() {
+        console.log("WILL RENDER LAYER")
+
+        const options = getOptionsFromForm();
+        Object.entries(options).forEach(([key, value]) => {
+            setHashQueryString(key, value);
         });
 
         console.log(options)
