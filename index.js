@@ -1,4 +1,4 @@
-const OPTIONS = ['removeZeroes', 'barMetric', 'colorMetric', 'days', 'elevationMultiplier', 'upperPercentile'];
+const OPTIONS = ['removeZeroes', 'barMetric', 'colorMetric', 'days', 'elevationMultiplier', 'opacity'];
 
 var stateIdByUF = { "RO": 11, "AC": 12, "AM": 13, "RR": 14, "PA": 15, "AP": 16, "TO": 17, "MA": 21, "PI": 22, "CE": 23, "RN": 24, "PB": 25, "PE": 26, "AL": 27, "SE": 28, "BA": 29, "MG": 31, "ES": 32, "RJ": 33, "SP": 35, "PR": 41, "SC": 42, "RS": 43, "MS": 50, "MT": 51, "GO": 52, "DF": 53 }
 
@@ -431,6 +431,8 @@ async function doIt() {
         metric = metrics[options.barMetric]
         colorMetric = metrics[options.colorMetric]
 
+        const opacityValue = parseFloat(options.opacity) / 100
+
         const elevationMultiplier = options.elevationMultiplier >= 0 ? options.elevationMultiplier  : metric.elevationMultiplier
         // console.log(metric)
         maxMetricValue = Object.values(groupedAllCities).map(it => it[0][colorMetric.name] || 0).reduce(function(a, b) {
@@ -446,7 +448,7 @@ async function doIt() {
             // data: 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/geojson/vancouver-blocks.json',
             // data: doIt(),
             data: locationGeoData,
-            opacity: 0.8,
+            opacity: opacityValue,
 
             stroked: false,
             filled: true,
