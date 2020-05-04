@@ -22,7 +22,7 @@ body {
 #control-panel {
   font-family: Helvetica, Arial, sans-serif;
   position: absolute;
-  background: #fff;
+  /* background: #fff; */
   /* background: #222; */
   top: 0;
   left: 0;
@@ -30,6 +30,15 @@ body {
   padding: 20px;
   z-index: 1;
 }
+
+body.bootstrap-dark #control-panel {
+   background: #191d21;
+}
+
+body.bootstrap #control-panel {
+  background: #fff;
+}
+
 
 /* poor man boostrap */
 .form-check-inline {

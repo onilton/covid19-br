@@ -1,4 +1,4 @@
-const OPTIONS = ['removeZeroes', 'barMetric', 'colorMetric', 'days', 'elevationMultiplier', 'opacity'];
+const OPTIONS = ['darkMode', 'removeZeroes', 'barMetric', 'colorMetric', 'days', 'elevationMultiplier', 'opacity'];
 
 var stateIdByUF = { "RO": 11, "AC": 12, "AM": 13, "RR": 14, "PA": 15, "AP": 16, "TO": 17, "MA": 21, "PI": 22, "CE": 23, "RN": 24, "PB": 25, "PE": 26, "AL": 27, "SE": 28, "BA": 29, "MG": 31, "ES": 32, "RJ": 33, "SP": 35, "PR": 41, "SC": 42, "RS": 43, "MS": 50, "MT": 51, "GO": 52, "DF": 53 }
 
@@ -320,16 +320,6 @@ async function doIt() {
     }
 
     window.addEventListener("hashchange", () => {
-        const params = getHashQueryString();
-        const dark = params.get("dark");
-
-        const body = document.getElementsByTagName("body")[0];
-        if (dark == 'true') {
-            body.className="bootstrap-dark";
-        } else {
-            body.className="bootstrap";
-        }
-
         setOptionsInForm(Object.assign({},defaultValuesForOptions, getOptionsFromHash()));
     }, false);
 
@@ -418,6 +408,15 @@ async function doIt() {
             }
         });
 
+        const mapStyleVersion = options.darkMode ? 'dark' : 'light';
+        const mapStyle = `mapbox://styles/mapbox/${mapStyleVersion}-v9`;
+
+        if (options.darkMode) {
+            document.body.className="bootstrap-dark";
+        } else {
+            document.body.className="bootstrap";
+        }
+
         console.log('groupedCovidCities');
         console.log(Object.keys(groupedCovidCities).length);
 
@@ -500,9 +499,10 @@ async function doIt() {
         });
 
         deckgl.setProps({
-            layers: [geojsonLayer]
+            layers: [geojsonLayer],
         });
 
+        deckgl.getMapboxMap().setStyle(mapStyle);
     }
 
     // function colorScale(x) {
