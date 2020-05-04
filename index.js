@@ -262,6 +262,7 @@ async function doIt() {
     const deckgl = new deck.DeckGL({
         mapboxApiAccessToken: 'pk.eyJ1Ijoib25pbHRvbiIsImEiOiJjazk5ZjZ0bjQwdXpqM2txeGFlMmQzMjZuIn0.vvNzNb-52JjOo59Eqmq7Tg',
         mapStyle: 'mapbox://styles/mapbox/light-v9',
+        // mapStyle: 'mapbox://styles/mapbox/dark-v9',
         initialViewState: {
             // latitude: 49.254,
             // longitude: -123.13,
