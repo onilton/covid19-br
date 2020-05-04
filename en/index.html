@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Covid-19 in Brasil</title>
+
+    <link rel="stylesheet" media="all" href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css">
+    <link rel="stylesheet" media="all" href="https://unpkg.com/@forevolve/bootstrap-dark@1.0.0-alpha.981/dist/css/toggle-bootstrap.min.css">
+    <link rel="stylesheet" media="all" href="https://unpkg.com/@forevolve/bootstrap-dark@1.0.0-alpha.981/dist/css/toggle-bootstrap-dark.min.css">
+
+    <link rel="stylesheet" media="all" href="../style.css">
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
+    <script src="https://unpkg.com/deck.gl@7.3.15/dist.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/lodash/4.17.2/lodash.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+    <script src="../index.js"></script>
+    <script>
+        var tooltipTmpl = `
+            <div class="card text-body">
+                <div class="card-header">
+                    <b> %s / %s </b>
+                </div>
+                <div class="card-body">
+                    Deaths: %s <br>
+                    Confirmed Cases: %s <br>
+                    Cases per 100k inhabitants: %s <br>
+                    Date: %s <br>
+                    <br>
+                    <b>Click</b> for more info.
+                    <br>Debug:
+                    <br>Idx: %s / %s
+                </div>
+            </div>`;
+    </script>
+</head>
+
+<body class="bootstrap" >
+    <div id="tooltip"></div>
+    <div id="control-panel">
+        <h4>Covid-19 in Brasil</h4>
+        <form id="control-form">
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="darkMode" name="darkMode" type="checkbox"></input>
+                    <label class="custom-control-label" class="form-check-label" for="darkMode">Dark Mode</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="removeZeroes" name="removeZeroes" type="checkbox"></input>
+                    <label class="custom-control-label" class="form-check-label" for="removeZeroes">Hide cities without cases/deaths</label>
+                </div>
+            </div>
+            <div id="barMetric" class="form-group">
+                <label class="form-check-label">Bar metric: </label>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio1"
+                        value="confirmed" checked>
+                    <label class="custom-control-label" for="inlineRadio1">Confirmed</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio2" value="deaths">
+                    <label class="custom-control-label" for="inlineRadio2">Deaths</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio3"
+                        value="confirmed_per_100k_inhabitants">
+                    <label class="custom-control-label" for="inlineRadio3">Confirmed / 100k</label>
+                </div>
+            </div>
+            <div id="colorMetric" class="form-group">
+                <label class="form-check-label">Color metric: </label>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric1"
+                        value="confirmed" checked>
+                    <label class="custom-control-label" for="inlineColorMetric1">Confirmed</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric2"
+                        value="deaths">
+                    <label class="custom-control-label" for="inlineColorMetric2">Deaths</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric3"
+                        value="confirmed_per_100k_inhabitants">
+                    <label class="custom-control-label" for="inlineColorMetric3">Confirmed / 100k</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Days from first case:&nbsp;</label><span id="days-value"></span>
+                <input id="days" class="custom-range" type="range" min="0" max="100" step="1" value="0"></input>
+            </div>
+            <div class="form-group form-inline justify-content-center">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button id="previous-day" type="button" class="btn btn-primary day-button">&laquo;</button>
+                    </div>
+                    <input id="current-day" class="form-control" type="text" value="2020-03-04" readonly>
+                    <div class="input-group-append">
+                        <button id="next-day" type="button" class="btn btn-primary day-button">&raquo;</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#aboutModal">
+                    About
+                </button>
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAdvanced" aria-expanded="false" aria-controls="collapseAdvanced">
+                  Advanced
+                </button>
+            </div>
+              <div class="collapse" id="collapseAdvanced">
+                <div class="card card-body" style="max-width: 450px">
+                    <div>
+                        <label>Elevation Multiplier</label>
+                        <input id="elevationMultiplier" type="range" min="-1" max="20000" step="1000" value="-1"></input>
+                        <span id="elevationMultiplier-value"></span>
+                    </div>
+                    <div>
+                        <label>Opacity</label>
+                        <input id="opacity" type="range" min="0" max="100" step="1" value="80"></input>
+                        <span id="opacity-value"></span>
+                    </div>
+
+                </div>
+              </div>
+
+
+        </form>
+
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="aboutModalLabel">Sobre</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>Covid-19 no Brasil</h4>
+                <p>
+                    O código dessa visualização pode ser encontrado em <a href="https://github.com/onilton/deck-covid19">https://github.com/onilton/deck-covid19</a>
+                </p>
+                <p>
+                    Contribuições são bem-vindas!
+                </p>
+                <p>
+                    Esta visualização foi construída por <a href="http://twitter.com/oniltonmaciel">Onilton Maciel</a>,
+                    utilizando <a href="https://deck.gl/#/">deck.gl</a> com os números fornecidos pelas secretarias de saúde dos estados,
+                    dados tratados e disponibilizados por <a href="https://brasil.io/">Brasil.io</a>.
+                </p>
+                <h5>Por quê?</h5>
+                <p>
+                    Existem muitos gráficos/mapas parecidos, poucos a nível de município.
+                </p>
+                <p>
+                    Além disso, a elevação possível com o deck.gl ajuda a visualizar algumas
+                    diferenças de forma mais clara, principalmente em municípios pequenos, mas com uma grande população.
+                </p>
+                <p>
+                    Sempre tive um pouco dificuldade de ler os mapas que usam somente uma escala de cores.
+                </p>
+                <p>
+                    Outra vantagem interessante é comparar duas métricas diferentes no mesmo gráfico, como por exemplo, mortes X casos.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+
+</html>
