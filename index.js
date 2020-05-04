@@ -114,16 +114,17 @@ function loadCSV(file) {
      });
  }
 
- let csvCovidData = null
+ let csvCovidDataPromise = null
 
  // Get covid data
 async function fetchCovidCsvData() {
-    if (csvCovidData == null) {
-       const localCsvCovidData = await loadCSV("https://raw.githubusercontent.com/onilton/covid19-br/master/caso_full.csv")
-       csvCovidData = _.groupBy(localCsvCovidData, i => i.date)
+    if (csvCovidDataPromise == null) {
+        csvCovidDataPromise = loadCSV("https://raw.githubusercontent.com/onilton/covid19-br/master/caso_full.csv").then(csvCovidData =>
+            _.groupBy(csvCovidData, i => i.date)
+        )
     }
 
-    return csvCovidData;
+    return await csvCovidDataPromise;
 }
 
 // Get covid data
