@@ -230,9 +230,10 @@ var maxMetricValue = undefined;
 async function doIt() {
     // confirmed | deaths | confirmed_per_100k_inhabitants
     const metrics = {
-        confirmed: { name: "last_available_confirmed", label: "Casos confirmados", elevationMultiplier: 500 },
-        deaths: { name: "last_available_deaths", label: "Mortes", elevationMultiplier: 1000 },
-        confirmed_per_100k_inhabitants: { name: "last_available_confirmed_per_100k_inhabitants", label: "Conf. proporcional", elevationMultiplier: 3000 }
+        confirmed: { name: "last_available_confirmed", label: "Casos confirmados", elevationMultiplier: 500, baseElevationMultiplier: 1000 },
+        deaths: { name: "last_available_deaths", label: "Mortes", elevationMultiplier: 1000, baseElevationMultiplier: 1000 },
+        confirmed_per_100k_inhabitants: { name: "last_available_confirmed_per_100k_inhabitants", label: "Conf. proporcional", elevationMultiplier: 3000, baseElevationMultiplier: 1000 },
+        population: { name: "estimated_population_2019", label: "Population", elevationMultiplier: 0.9, baseElevationMultiplier: 0 }
     }
     // elevation multiplier
 
@@ -465,7 +466,7 @@ async function doIt() {
                 const metricValue = groupedAllCities[f.properties.codarea][0][metric.name]
                 // const elevationMultiplier = metrics[metric.name].elevationMultiplier
                 // console.log(metricValue);
-                return metricValue * elevationMultiplier + Math.ceil(Math.max(1, metricValue)) * 1000
+                return metricValue * elevationMultiplier + Math.ceil(Math.max(1, metricValue)) * metric.baseElevationMultiplier
             },
 
             // getElevation: f => Math.floor(Math.random() * Math.random() * Math.random() * 500000),

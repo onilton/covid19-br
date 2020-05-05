@@ -90,23 +90,32 @@
                     <label class="custom-control-label" class="form-check-label" for="removeZeroes">Esconder munícipios sem casos/mortes</label>
                 </div>
             </div>
-            <div id="barMetric" class="form-group">
-                <label class="form-check-label">Bar metric: </label>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio1"
-                        value="confirmed" checked>
-                    <label class="custom-control-label" for="inlineRadio1">Casos</label>
+            <fieldset id="barMetric" class="form-group">
+                <div class="row">
+                    <label class="col-form-label col-sm-2 pt-0 form-check-label">Barra: </label>
+                    <div class="col-sm-10">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio1"
+                                value="confirmed" checked>
+                            <label class="custom-control-label" for="inlineRadio1">Casos</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio2" value="deaths">
+                            <label class="custom-control-label" for="inlineRadio2">Mortes</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio3"
+                                value="confirmed_per_100k_inhabitants">
+                            <label class="custom-control-label" for="inlineRadio3">Casos / 100 mil</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio4"
+                                value="population">
+                            <label class="custom-control-label" for="inlineRadio4">Habitantes</label>
+                        </div>
+                    </div>
                 </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio2" value="deaths">
-                    <label class="custom-control-label" for="inlineRadio2">Mortes</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio3"
-                        value="confirmed_per_100k_inhabitants">
-                    <label class="custom-control-label" for="inlineRadio3">Casos / 100 mil</label>
-                </div>
-            </div>
+            </fieldset>
             <div id="colorMetric" class="form-group">
                 <label class="form-check-label">Color metric: </label>
                 <div class="custom-control custom-radio custom-control-inline">
