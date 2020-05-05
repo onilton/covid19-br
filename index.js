@@ -486,7 +486,7 @@ async function doIt() {
                 filterRange: [metric, groupedAllCities, date, options],
 
             },
-            extensions: [new DataFilterExtension({ filterSize: 1 })],
+            extensions: [new deck.DataFilterExtension({ filterSize: 1 })],
             getFilterValue: f => {
                 const metricValue = groupedAllCities[f.properties.codarea][0][metric.name] || 0
 
