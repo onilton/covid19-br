@@ -1,4 +1,4 @@
-const OPTIONS = ['darkMode', 'removeZeroes', 'barMetric', 'colorMetric', 'days', 'elevationMultiplier', 'opacity'];
+const OPTIONS = ['state', 'darkMode', 'removeZeroes', 'barMetric', 'colorMetric', 'days', 'elevationMultiplier', 'opacity'];
 
 var stateIdByUF = { "RO": 11, "AC": 12, "AM": 13, "RR": 14, "PA": 15, "AP": 16, "TO": 17, "MA": 21, "PI": 22, "CE": 23, "RN": 24, "PB": 25, "PE": 26, "AL": 27, "SE": 28, "BA": 29, "MG": 31, "ES": 32, "RJ": 33, "SP": 35, "PR": 41, "SC": 42, "RS": 43, "MS": 50, "MT": 51, "GO": 52, "DF": 53 }
 
@@ -420,7 +420,9 @@ async function doIt() {
         console.log('groupedCovidCities');
         console.log(Object.keys(groupedCovidCities).length);
 
-        const filterRange = options.removeZeroes ? [1, Number.MAX_SAFE_INTEGER] : [0, Number.MAX_SAFE_INTEGER];
+        const zeroesFilterRange = options.removeZeroes ? [1, Number.MAX_SAFE_INTEGER] : [0, Number.MAX_SAFE_INTEGER];
+        const stateFilterRange = options.state == 'All' ? [0, 1] : [1, 1];
+        const filterRange = [zeroesFilterRange, stateFilterRange];
         console.log("filterRange")
         console.log(filterRange);
 
@@ -486,11 +488,11 @@ async function doIt() {
                 filterRange: [metric, groupedAllCities, date, options],
 
             },
-            extensions: [new deck.DataFilterExtension({ filterSize: 1 })],
+            extensions: [new deck.DataFilterExtension({ filterSize: 2 })],
             getFilterValue: f => {
                 const metricValue = groupedAllCities[f.properties.codarea][0][metric.name] || 0
-
-                return parseInt(metricValue)
+                const sameStateInt = groupedAllCities[f.properties.codarea][0].state == options.state ? 1 : 0
+                return [ parseInt(metricValue), sameStateInt ]
 
             },
             filterRange: filterRange,
