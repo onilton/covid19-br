@@ -43,7 +43,7 @@
     <div id="control-panel">
         <h4> Covid-19 no Brasil </h4>
         <form id="control-form" class="pt-2">
-            <div class="form-group row">
+            <div class="form-group form-row">
                 <label class="col-sm-2 col-form-label" for="state">Estado</label>
                 <div class="col-sm-10">
                     <select id="state" class="custom-select">
@@ -90,10 +90,10 @@
                     <label class="custom-control-label" class="form-check-label" for="removeZeroes">Esconder munícipios sem casos/mortes</label>
                 </div>
             </div>
-            <fieldset id="barMetric" class="form-group">
-                <div class="row">
-                    <label class="col-form-label col-sm-2 pt-0 form-check-label">Barra: </label>
-                    <div class="col-sm-10">
+            <fieldset class="form-group">
+                <div class="form-row">
+                    <legend class="col-form-label col-sm-2 pt-0">Barra</legend>
+                    <div id="barMetric" class="col">
                         <div class="custom-control custom-radio">
                             <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio1"
                                 value="confirmed" checked>
@@ -114,26 +114,32 @@
                             <label class="custom-control-label" for="inlineRadio4">Habitantes</label>
                         </div>
                     </div>
+                    <legend class="col-form-label col-auto pt-0">Cor</legend>
+                    <div id="colorMetric" class="col">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric1"
+                                value="confirmed" checked>
+                            <label class="custom-control-label" for="inlineColorMetric1">Casos</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric2"
+                                value="deaths">
+                            <label class="custom-control-label" for="inlineColorMetric2">Mortes</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric3"
+                                value="confirmed_per_100k_inhabitants">
+                            <label class="custom-control-label" for="inlineColorMetric3">Casos / 100 mil</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric4"
+                                value="population">
+                            <label class="custom-control-label" for="inlineColorMetric4">Habitantes</label>
+                        </div>
+                    </div>
                 </div>
             </fieldset>
-            <div id="colorMetric" class="form-group">
-                <label class="form-check-label">Color metric: </label>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric1"
-                        value="confirmed" checked>
-                    <label class="custom-control-label" for="inlineColorMetric1">Casos</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric2"
-                        value="deaths">
-                    <label class="custom-control-label" for="inlineColorMetric2">Mortes</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric3"
-                        value="confirmed_per_100k_inhabitants">
-                    <label class="custom-control-label" for="inlineColorMetric3">Casos / 100 mil</label>
-                </div>
-            </div>
+
             <div class="form-group">
                 <label>Dias do primeiro caso:&nbsp;</label><span id="days-value"></span>
                 <input id="days" class="custom-range" type="range" min="0" max="100" step="1" value="0"></input>
