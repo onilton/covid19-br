@@ -593,6 +593,7 @@ async function doIt() {
                     data.last_available_confirmed || 0,
                     data.last_available_confirmed_per_100k_inhabitants || 0 ,
                     data.last_available_date || '',
+                    data.estimated_population_2019 || '',
                     logColorScale(data[colorMetric.name], maxMetricValue, true),
                     COLOR_SCALE.length - 1)
             };
