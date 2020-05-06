@@ -27,6 +27,7 @@
                     Mortes: %s <br>
                     Casos confirmados: %s <br>
                     Casos a cada 100 mil habitantes: %s <br>
+                    Óbitos a cada 100 mil habitantes: %s <br>
                     Data: %s <br>
                     Habitantes: %s <br>
                     <br>
@@ -97,6 +98,11 @@
                             <label class="custom-control-label" for="inlineRadio3">Casos / 100 mil</label>
                         </div>
                         <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio5"
+                                value="deaths_per_100k">
+                            <label class="custom-control-label" for="inlineRadio5">Óbitos / 100 mil</label>
+                        </div>
+                        <div class="custom-control custom-radio">
                             <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio4"
                                 value="population">
                             <label class="custom-control-label" for="inlineRadio4">Habitantes</label>
@@ -118,6 +124,11 @@
                             <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric3"
                                 value="confirmed_per_100k_inhabitants">
                             <label class="custom-control-label" for="inlineColorMetric3">Casos / 100 mil</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric5"
+                                value="deaths_per_100k">
+                            <label class="custom-control-label" for="inlineColorMetric5">Óbitos / 100 mil</label>
                         </div>
                         <div class="custom-control custom-radio">
                             <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric4"

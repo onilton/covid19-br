@@ -119,9 +119,13 @@ function loadCSV(file) {
  // Get covid data
 async function fetchCovidCsvData() {
     if (csvCovidDataPromise == null) {
-        csvCovidDataPromise = loadCSV("https://raw.githubusercontent.com/onilton/covid19-br/master/caso_full.csv").then(csvCovidData =>
-            _.groupBy(csvCovidData, i => i.date)
-        )
+        csvCovidDataPromise = loadCSV("https://raw.githubusercontent.com/onilton/covid19-br/master/caso_full.csv").then(csvCovidData => {
+            csvCovidData.forEach(row => {
+                row.deaths_per_100k = (100000 * parseInt(row.last_available_deaths)) / parseInt(row.estimated_population_2019)
+            })
+
+            return _.groupBy(csvCovidData, i => i.date);
+        })
     }
 
     return await csvCovidDataPromise;
@@ -230,10 +234,11 @@ var maxMetricValue = undefined;
 async function doIt() {
     // confirmed | deaths | confirmed_per_100k_inhabitants
     const metrics = {
-        confirmed: { name: "last_available_confirmed", elevationMultiplier: 500, baseElevationMultiplier: 1000 },
+        confirmed: { name: "last_available_confirmed", elevationMultiplier: 500, baseElevationMultiplier: 1 },
         deaths: { name: "last_available_deaths", elevationMultiplier: 1000, baseElevationMultiplier: 1000 },
         confirmed_per_100k_inhabitants: { name: "last_available_confirmed_per_100k_inhabitants", elevationMultiplier: 3000, baseElevationMultiplier: 1000 },
         population: { name: "estimated_population_2019", elevationMultiplier: 0.9, baseElevationMultiplier: 0 },
+        deaths_per_100k: { name: "deaths_per_100k", elevationMultiplier: 12000, baseElevationMultiplier: 2000}
     }
     // elevation multiplier
 
@@ -595,6 +600,7 @@ async function doIt() {
                     data.last_available_deaths || 0,
                     data.last_available_confirmed || 0,
                     data.last_available_confirmed_per_100k_inhabitants || 0 ,
+                    data.deaths_per_100k || 0,
                     data.last_available_date || '',
                     data.estimated_population_2019 || '',
                     logColorScale(data[colorMetric.name], maxMetricValue, true),
