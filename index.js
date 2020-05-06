@@ -373,6 +373,11 @@ async function doIt() {
 
     await renderLayer();
 
+    const loadingDiv = document.getElementById('loading');
+    loadingDiv.classList.remove("d-flex");
+    loadingDiv.classList.add("d-none");
+    document.getElementById('control-form').style.display = "block";
+
     async function renderLayer() {
         console.log("WILL RENDER LAYER")
 
@@ -534,4 +539,6 @@ async function doIt() {
 
 }
 
-doIt()
+window.onload = function() {
+    doIt();
+}

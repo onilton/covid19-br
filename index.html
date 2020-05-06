@@ -82,7 +82,12 @@
     <div id="tooltip"></div>
     <div id="control-panel">
         <h4> Covid-19 no Brasil </h4>
-        <form id="control-form" class="pt-2">
+        <div id="loading" class="d-flex justify-content-center mt-5 mb-5" style="width:384px" >
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <form id="control-form" class="pt-2" style="display:none" >
             <div class="form-group form-row">
                 <label class="col-sm-2 col-form-label" for="state">Estado</label>
                 <div class="col-sm-10">
