@@ -53,3 +53,8 @@ body.bootstrap #control-panel {
 #current-day {
   text-align: center;
 }
+
+#collapseAdvanced {
+  width: 384px;
+  max-width: 384px;
+}
