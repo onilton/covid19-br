@@ -78,23 +78,6 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group form-row">
-                <div class="col-auto">
-                    <div class="custom-control custom-switch">
-                        <input class="custom-control-input" id="darkMode" name="darkMode" type="checkbox"></input>
-                        <label class="custom-control-label" class="form-check-label" for="darkMode">Modo escuro</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="custom-control custom-switch">
-                        <input class="custom-control-input" id="removeZeroes" name="removeZeroes" type="checkbox"></input>
-                        <label class="custom-control-label" class="form-check-label" for="removeZeroes">Esconder locais sem casos</label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-
-            </div>
             <fieldset class="form-group">
                 <div class="form-row">
                     <legend class="col-form-label col-sm-2 pt-0">Barra</legend>
@@ -145,11 +128,11 @@
                 </div>
             </fieldset>
 
-            <div class="form-group">
+            <div class="form-group mb-1">
                 <label>Dias do primeiro caso:&nbsp;</label><span id="days-value"></span>
                 <input id="days" class="custom-range" type="range" min="0" max="100" step="1" value="0"></input>
             </div>
-            <div class="form-group form-inline justify-content-center">
+            <div class="form-group form-inline justify-content-center mb-4">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <button id="previous-day" type="button" class="btn btn-primary day-button">&laquo;</button>
@@ -161,7 +144,21 @@
                 </div>
 
             </div>
-            <div class="form-group">
+            <div class="form-group form-row">
+                <div class="col-auto">
+                    <div class="custom-control custom-switch">
+                        <input class="custom-control-input" id="darkMode" name="darkMode" type="checkbox"></input>
+                        <label class="custom-control-label" class="form-check-label" for="darkMode">Modo escuro</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="custom-control custom-switch">
+                        <input class="custom-control-input" id="removeZeroes" name="removeZeroes" type="checkbox"></input>
+                        <label class="custom-control-label" class="form-check-label" for="removeZeroes">Esconder locais sem casos</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group border-top pt-3">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#aboutModal">
                     Sobre
                 </button>
