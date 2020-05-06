@@ -173,21 +173,19 @@ async function fetchCovidCities(stateUFs, dateStr) {
     return groupedCovidCities;
 }
 
-
-// Fetch a random joke
-async function fetchLocationGeoData(malhaId) {
-    console.log("start fetch")
-    const rsp = await fetch(`https://servicodados.ibge.gov.br/api/v2/malhas/${malhaId}?resolucao=5&formato=application/vnd.geo+json`)
-    console.log("end fetch")
+async function fetchJson(url) {
+    console.log("start fetch " + url)
+    const rsp = await fetch(url)
+    console.log("end fetch" + url)
     return await rsp.json();
 }
 
-// Fetch a random joke
+async function fetchLocationGeoData(malhaId) {
+    return await fetchJson(`https://servicodados.ibge.gov.br/api/v2/malhas/${malhaId}?resolucao=5&formato=application/vnd.geo+json`)
+}
+
 async function fetchLocationInfo(stateId) {
-    console.log("start fetch")
-    const rsp = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${stateId}/distritos`)
-    console.log("end fetch")
-    return await rsp.json();
+    return await fetchJson(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${stateId}/distritos`)
 }
 
 function getGroupedAllCities(locationInfo, cityName) {
