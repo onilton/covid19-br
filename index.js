@@ -218,6 +218,14 @@ function debounced(delay, fn) {
     }
 }
 
+function setDarkMode(darkMode) {
+    if (darkMode) {
+        document.body.className = "bootstrap-dark";
+    } else {
+        document.body.className = "bootstrap";
+    }
+}
+
 function getHashQueryString() {
     return new URLSearchParams(window.location.hash.substr(1))
 }
@@ -310,7 +318,9 @@ function setupUiControls(layerRenderingFunc) {
 
     defaultValuesForOptions = getOptionsFromForm();
 
-    setOptionsInForm(getOptionsFromHash())
+    const options = getOptionsFromHash()
+    setOptionsInForm(options)
+    setDarkMode(options.darkMode)
 }
 
 var groupedAllCities = {}
@@ -412,12 +422,9 @@ async function doIt() {
 
         const mapStyleVersion = options.darkMode ? 'dark' : 'light';
         const mapStyle = `mapbox://styles/mapbox/${mapStyleVersion}-v9`;
+        setDarkMode(options.darkMode);
 
-        if (options.darkMode) {
-            document.body.className = "bootstrap-dark";
-        } else {
-            document.body.className = "bootstrap";
-        }
+
 
         console.log('groupedCovidCities');
         console.log(Object.keys(groupedCovidCities).length);
