@@ -218,6 +218,69 @@ function debounced(delay, fn) {
     }
 }
 
+function getHashQueryString() {
+    return new URLSearchParams(window.location.hash.substr(1))
+}
+
+let defaultValuesForOptions;
+function setHashQueryString(key, value) {
+    const params = getHashQueryString();
+    if (value == defaultValuesForOptions[key]) {
+        params.delete(key);
+    } else {
+        params.set(key, value);
+    }
+    window.location.hash = '#' + params.toString();
+}
+
+function getOptionsFromHash() {
+    return Object.fromEntries(getHashQueryString());
+}
+
+function getOptionsFromForm() {
+    const options = {};
+
+    OPTIONS.forEach(key => {
+        const form = document.getElementById('control-form')
+        const element = form.elements[key]
+
+        let value;
+        if (element.type == 'checkbox') {
+            value = element.checked;
+        } else {
+            value = element.value;
+        }
+
+        options[key] = value;
+    });
+
+    return options;
+}
+
+function setOptionsInForm(options) {
+    Object.entries(options).forEach(([key, value]) => {
+        const form = document.getElementById('control-form')
+        const element = form.elements[key]
+
+        if (element && element.type == 'checkbox') {
+            let boolValue = value;
+            if (typeof value == 'string') {
+                boolValue = value == 'true'
+            }
+            element.checked = boolValue;
+        } else if (element) {
+            element.value = value;
+        }
+
+        const screenValue = document.getElementById(key + '-value')
+        if (screenValue) {
+            screenValue.innerHTML = value;
+        }
+    });
+
+    return options;
+}
+
 function setupUiControls(layerRenderingFunc) {
     document.getElementById('days').max = daysFromPandemicStart();
     document.getElementById('days').value = daysFromPandemicStart() - 1;
@@ -240,6 +303,14 @@ function setupUiControls(layerRenderingFunc) {
             })
         }
     });
+
+    window.addEventListener("hashchange", () => {
+        setOptionsInForm(Object.assign({}, defaultValuesForOptions, getOptionsFromHash()));
+    }, false);
+
+    defaultValuesForOptions = getOptionsFromForm();
+
+    setOptionsInForm(getOptionsFromHash())
 }
 
 var groupedAllCities = {}
@@ -298,82 +369,8 @@ async function doIt() {
 
     setupUiControls(renderLayer);
 
-    function getHashQueryString() {
-        return new URLSearchParams(window.location.hash.substr(1))
-    }
 
-    let defaultValuesForOptions;
-    function setHashQueryString(key, value) {
-        const params = new URLSearchParams(window.location.hash.substr(1));
-        if (value == defaultValuesForOptions[key]) {
-            params.delete(key);
-        } else {
-            params.set(key, value);
-        }
-        window.location.hash = '#' + params.toString();
-    }
 
-    window.addEventListener("hashchange", () => {
-        setOptionsInForm(Object.assign({}, defaultValuesForOptions, getOptionsFromHash()));
-    }, false);
-
-    function getOptionsFromHash() {
-        return Object.fromEntries(getHashQueryString());
-    }
-
-    function getOptionsFromForm() {
-        const options = {};
-
-        OPTIONS.forEach(key => {
-            const form = document.getElementById('control-form')
-            const element = form.elements[key]
-
-            let value;
-            if (element.type == 'checkbox') {
-                value = element.checked;
-            } else {
-                value = element.value;
-            }
-
-            const screenValue = document.getElementById(key + '-value')
-            if (screenValue) {
-                screenValue.innerHTML = value;
-            }
-
-            options[key] = value;
-        });
-
-        return options;
-    }
-
-    function setOptionsInForm(options) {
-        Object.entries(options).forEach(([key, value]) => {
-
-            const form = document.getElementById('control-form')
-            const element = form.elements[key]
-
-            if (element && element.type == 'checkbox') {
-                let boolValue = value;
-                if (typeof value == 'string') {
-                    boolValue = value == 'true'
-                }
-                element.checked = boolValue;
-            } else if (element) {
-                element.value = value;
-            }
-
-            const screenValue = document.getElementById(key + '-value')
-            if (screenValue) {
-                screenValue.innerHTML = value;
-            }
-        });
-
-        return options;
-    }
-
-    defaultValuesForOptions = getOptionsFromForm();
-
-    setOptionsInForm(getOptionsFromHash())
 
     await renderLayer();
 
