@@ -320,6 +320,9 @@ var maxMetricValue = undefined;
 
 
 async function doIt() {
+    setupUiControls(renderLayer);
+
+
     const metrics = {
         confirmed: { name: "last_available_confirmed", elevationMultiplier: 500, baseElevationMultiplier: 1 },
         deaths: { name: "last_available_deaths", elevationMultiplier: 1000, baseElevationMultiplier: 1000 },
@@ -367,7 +370,6 @@ async function doIt() {
         getTooltip
     });
 
-    setupUiControls(renderLayer);
 
 
 
