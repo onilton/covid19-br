@@ -142,7 +142,6 @@ async function fetchCovidResults(stateUF, date) {
 
 // Get covid data
 async function oldFetchCovidResults(stateUF, date) {
-    // console.log("start fetch c")
     let url = "https://brasil.io/api/dataset/covid19/caso/data?state=" + stateUF
     if (date) {
         url += "&date=" + date;
@@ -151,10 +150,8 @@ async function oldFetchCovidResults(stateUF, date) {
     }
 
     const rsp = await fetch(url)
-    // console.log("end fetch c")
     const json = await rsp.json();
     return json.results;
-    //return data.value.joke;
 }
 
 const covidCitiesCache = {}
@@ -165,7 +162,6 @@ async function fetchCovidCities(stateUFs, dateStr) {
     }
     let allCovidResults = await Promise.all(stateUFs.map(stateUF => fetchCovidResults(stateUF, dateStr)));
     let covidResults = _.flatten(allCovidResults, true)
-    // console.log(covidResults)
     var covidCities = covidResults.filter(city => city.city != null)
     const groupedCovidCities = _.groupBy(covidCities, city => city.city_ibge_code)
     if (!(stateUFs in covidCitiesCache)) {
@@ -184,7 +180,6 @@ async function fetchLocationGeoData(malhaId) {
     const rsp = await fetch(`https://servicodados.ibge.gov.br/api/v2/malhas/${malhaId}?resolucao=5&formato=application/vnd.geo+json`)
     console.log("end fetch")
     return await rsp.json();
-    //return data.value.joke;
 }
 
 // Fetch a random joke
@@ -193,7 +188,6 @@ async function fetchLocationInfo(stateId) {
     const rsp = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${stateId}/distritos`)
     console.log("end fetch")
     return await rsp.json();
-    //return data.value.joke;
 }
 
 function getGroupedAllCities(locationInfo, cityName) {
@@ -232,7 +226,6 @@ var groupedAllCities = {}
 var maxMetricValue = undefined;
 
 async function doIt() {
-    // confirmed | deaths | confirmed_per_100k_inhabitants
     const metrics = {
         confirmed: { name: "last_available_confirmed", elevationMultiplier: 500, baseElevationMultiplier: 1 },
         deaths: { name: "last_available_deaths", elevationMultiplier: 1000, baseElevationMultiplier: 1000 },
@@ -240,7 +233,7 @@ async function doIt() {
         population: { name: "estimated_population_2019", elevationMultiplier: 0.9, baseElevationMultiplier: 0 },
         deaths_per_100k: { name: "deaths_per_100k", elevationMultiplier: 12000, baseElevationMultiplier: 2000}
     }
-    // elevation multiplier
+
 
     let metric = metrics.confirmed
     let colorMetric = metrics.confirmed
@@ -269,12 +262,7 @@ async function doIt() {
     const deckgl = new deck.DeckGL({
         mapboxApiAccessToken: 'pk.eyJ1Ijoib25pbHRvbiIsImEiOiJjazk5ZjZ0bjQwdXpqM2txeGFlMmQzMjZuIn0.vvNzNb-52JjOo59Eqmq7Tg',
         mapStyle: 'mapbox://styles/mapbox/light-v9',
-        // mapStyle: 'mapbox://styles/mapbox/dark-v9',
         initialViewState: {
-            // latitude: 49.254,
-            // longitude: -123.13,
-            // zoom: 11,
-            //   maxZoom: 16,
             latitude: -15.254,
             longitude: -51.13,
             zoom: 4,
@@ -282,7 +270,6 @@ async function doIt() {
             pitch: 45
         },
         controller: true,
-        //layers: [geojsonLayer],
         getTooltip
     });
 
@@ -307,7 +294,6 @@ async function doIt() {
                 el.oninput = debounced(300, renderLayer)
             })
         }
-        //document.getElementByName(key).oninput = renderLayer;
     });
 
     function getHashQueryString() {
@@ -445,7 +431,6 @@ async function doIt() {
         const opacityValue = parseFloat(options.opacity) / 100
 
         const elevationMultiplier = options.elevationMultiplier >= 0 ? options.elevationMultiplier  : metric.elevationMultiplier
-        // console.log(metric)
         maxMetricValue = Object.values(groupedAllCities).map(it => it[0][colorMetric.name] || 0).reduce(function(a, b) {
             return Math.max(a, b);
         });
@@ -454,10 +439,6 @@ async function doIt() {
         console.log(maxMetricValue)
 
         const geojsonLayer = new deck.GeoJsonLayer({
-            //data: 'https://servicodados.ibge.gov.br/api/v2/malhas/13?resolucao=5&formato=application/vnd.geo+json',
-
-            // data: 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/geojson/vancouver-blocks.json',
-            // data: doIt(),
             data: locationGeoData,
             opacity: opacityValue,
 
@@ -466,29 +447,14 @@ async function doIt() {
             extruded: true,
             wireframe: options.wireframe,
             fp64: true,
-            // lineWidthUnits: 'pixels',
-            // lineWidthMaxPixels: 0,
 
             getElevation: f => {
-                // console.log(f.properties.codarea);
-                // console.log( groupedAllCities[f.properties.codarea][0].deaths);
                 const metricValue = groupedAllCities[f.properties.codarea][0][metric.name]
-                // const elevationMultiplier = metrics[metric.name].elevationMultiplier
-                // console.log(metricValue);
+
                 return metricValue * elevationMultiplier + Math.ceil(Math.max(1, metricValue)) * metric.baseElevationMultiplier
             },
 
-            // getElevation: f => Math.floor(Math.random() * Math.random() * Math.random() * 500000),
-            // getElevation: f => Math.floor(Math.random() * 100000),
-            // getFillColor: f => colorScale(f.properties.growth),
-            // getFillColor: f => colorScale(Math.floor(Math.random() * 12)),
-            // getFillColor: f => colorScale(groupedAllCities[f.properties.codarea][0][colorMetric.name]),
             getFillColor: f => logColorScale(groupedAllCities[f.properties.codarea][0][colorMetric.name], maxMetricValue),
-
-
-            // getLineColor: f => [255, 255, 255],
-
-
 
             pickable: true,
             updateTriggers: {
@@ -506,8 +472,6 @@ async function doIt() {
 
             },
             filterRange: filterRange,
-            // extensions: [new DataFilterExtension({filterSize: 1})]
-            // a
         });
 
         deckgl.setProps({
@@ -517,26 +481,15 @@ async function doIt() {
         deckgl.getMapboxMap().setStyle(mapStyle);
     }
 
-    // function colorScale(x) {
-    //     const i = Math.round(x * 7) + 4;
-    //     if (x < 0) {
-    //         return COLOR_SCALE[i] || COLOR_SCALE[0];
-    //     }
-    //     return COLOR_SCALE[i] || COLOR_SCALE[COLOR_SCALE.length - 1];
-    // }
-
     function logColorScale(outLocMetric, maxMetricValue, getIdx) {
         let locMetric = 0;
         if (outLocMetric) {
             locMetric = outLocMetric
         }
 
-
-
         const maxScaleIdx = COLOR_SCALE.length - 2;
 
         const logValue = (Math.log2(locMetric) / Math.log2(maxMetricValue)) * maxScaleIdx
-
 
         // let idx = Math.floor(locMetric / 5)
         let idx = Math.ceil(logValue)
@@ -547,56 +500,24 @@ async function doIt() {
             idx = 0;
         }
 
-
         //idx = Math.min(COLOR_SCALE.length - 1, idx)
         //  console.log(idx)
 
         if (getIdx) {
             return idx
         }
+
         return COLOR_SCALE[idx]
     }
-
-    // function colorScale(outLocMetric, getIdx) {
-    //     let locMetric = 0;
-    //     if (outLocMetric) {
-    //         locMetric = outLocMetric
-    //     }
-    //     // console.log(f.properties.codarea);
-    //     // const locMetric = groupedAllCities[x][0][metric.name]
-    //     // console.log(locMetric);
-
-
-    //     let idx = Math.floor(locMetric / 5)
-    //     // console.log(idx);
-    //     if (locMetric > 0) {
-    //         idx = idx + 1
-    //     }
-
-
-    //     idx = Math.min(COLOR_SCALE.length - 1, idx)
-    //     //  console.log(idx)
-
-    //     if (getIdx) {
-    //         return idx
-    //     }
-    //     return COLOR_SCALE[idx]
-    // }
 
     function poorManTemplate(tmpl, ...arguments) {
         return arguments.reduce((p,c) => p.replace(/%s/,c), tmpl);
     }
 
     function getTooltip({ object }) {
-        // return object && `${ JSON.stringify( groupedAllCities[object.properties.codarea][0], null, 2)} `;
-
         if (object) {
             const data = groupedAllCities[object.properties.codarea][0];
 
-            //   Idx: ${colorScale(data[metric.name], true)} <br>
-            // <b></b> <br><br>
-            // <a href="#" class="btn btn-primary">Go somewhere</a>
-        //             Idx: ${logColorScale(data[colorMetric.name], maxMetricValue, true)} / ${COLOR_SCALE.length - 1} <br>
             return {
                 html: poorManTemplate(tooltipTmpl,
                     data.city,
