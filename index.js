@@ -226,6 +226,11 @@ function setDarkMode(darkMode) {
     }
 }
 
+function getMapStyle(darkMode) {
+    const mapStyleVersion = darkMode ? 'dark' : 'light';
+    return `mapbox://styles/mapbox/${mapStyleVersion}-v9`;
+}
+
 function getHashQueryString() {
     return new URLSearchParams(window.location.hash.substr(1))
 }
@@ -317,9 +322,9 @@ function setupUiControls(layerRenderingFunc) {
     }, false);
 
     defaultValuesForOptions = getOptionsFromForm();
+    setOptionsInForm(getOptionsFromHash())
 
-    const options = getOptionsFromHash()
-    setOptionsInForm(options)
+    const options = getOptionsFromForm();
     setDarkMode(options.darkMode)
 }
 
@@ -368,7 +373,7 @@ async function doIt() {
 
     const deckgl = new deck.DeckGL({
         mapboxApiAccessToken: 'pk.eyJ1Ijoib25pbHRvbiIsImEiOiJjazk5ZjZ0bjQwdXpqM2txeGFlMmQzMjZuIn0.vvNzNb-52JjOo59Eqmq7Tg',
-        mapStyle: 'mapbox://styles/mapbox/light-v9',
+        mapStyle: getMapStyle(getOptionsFromForm().darkMode),
         initialViewState: {
             latitude: -15.254,
             longitude: -51.13,
@@ -491,7 +496,7 @@ async function doIt() {
             layers: [geojsonLayer],
         });
 
-        deckgl.getMapboxMap().setStyle(mapStyle);
+        deckgl.getMapboxMap().setStyle(getMapStyle(options.darkMode));
     }
 
     function logColorScale(outLocMetric, maxMetricValue, getIdx) {
