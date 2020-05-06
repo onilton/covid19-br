@@ -9,6 +9,44 @@
     <link rel="stylesheet" media="all" href="https://unpkg.com/@forevolve/bootstrap-dark@1.0.0-alpha.981/dist/css/toggle-bootstrap-dark.min.css">
 
     <link rel="stylesheet" media="all" href="../style.css">
+
+    <link rel="stylesheet" media="all" href="https://cdn.jsdelivr.net/npm/outdated-browser-rework@2.10.0/dist/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/outdated-browser-rework@2.10.0/dist/outdated-browser-rework.min.js"></script>
+    <script>
+        outdatedBrowserRework({
+            browserSupport: {
+                Chrome: 80, // Includes Chrome for mobile devices
+                Edge: 18,
+                Safari: 13,
+                "Mobile Safari": 12,
+                Firefox: 68,
+                Opera: 67,
+                Samsung: 10,
+                Vivaldi: false,
+                Yandex: false,
+                IE: false
+            },
+            requireChromeOnAndroid: false,
+            isUnknownBrowserOK: false,
+            messages: {
+                en: {
+                    outOfDate: "Your browser is out of date!",
+                    unsupported: "Your browser is not supported!",
+                    update: {
+                        web: "Update your browser to view this website correctly. ",
+                        googlePlay: "Please install Chrome from Google Play",
+                        appStore: "Please update iOS from the Settings App"
+                    },
+                    // You can set the URL to null if you do not want a clickable link or provide
+                    // your own markup in the `update.web` message.
+                    url: "http://outdatedbrowser.com/",
+                    callToAction: "Update my browser now",
+                    close: "Close"
+                }
+            }
+        });
+    </script>
+
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
     <script src="https://unpkg.com/deck.gl@7.3.15/dist.min.js"></script>
     <script src="https://cdn.jsdelivr.net/lodash/4.17.2/lodash.min.js"></script>
