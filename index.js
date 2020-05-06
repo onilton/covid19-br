@@ -365,7 +365,11 @@ async function doIt() {
             const element = form.elements[key]
 
             if (element && element.type == 'checkbox') {
-                element.checked = value;
+                let boolValue = value;
+                if (typeof value == 'string') {
+                    boolValue = value == 'true'
+                }
+                element.checked = boolValue;
             } else if (element) {
                 element.value = value;
             }
