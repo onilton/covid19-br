@@ -218,9 +218,34 @@ function debounced(delay, fn) {
     }
 }
 
+function setupUiControls(layerRenderingFunc) {
+    document.getElementById('days').max = daysFromPandemicStart();
+    document.getElementById('days').value = daysFromPandemicStart() - 1;
+
+    document.getElementById('next-day').onclick = (ev) => {
+        document.getElementById('days').value = parseInt(document.getElementById('days').value) + 1;
+        document.getElementById('days').oninput();
+    }
+
+    document.getElementById('previous-day').onclick = (ev) => {
+        document.getElementById('days').value = parseInt(document.getElementById('days').value) - 1;
+        document.getElementById('days').oninput();
+    }
+
+    OPTIONS.forEach(key => {
+        document.getElementById(key).oninput = debounced(300, layerRenderingFunc);
+        if (document.getElementById(key).type == undefined) {
+            document.getElementsByName(key).forEach(el => {
+                el.oninput = debounced(300, layerRenderingFunc)
+            })
+        }
+    });
+}
+
 var groupedAllCities = {}
 
 var maxMetricValue = undefined;
+
 
 
 async function doIt() {
@@ -271,28 +296,7 @@ async function doIt() {
         getTooltip
     });
 
-    document.getElementById('days').max = daysFromPandemicStart();
-
-    document.getElementById('days').value = daysFromPandemicStart() - 1;
-    document.getElementById('next-day').onclick = (ev) => {
-        document.getElementById('days').value = parseInt(document.getElementById('days').value) + 1;
-        document.getElementById('days').oninput();
-    }
-
-    document.getElementById('previous-day').onclick = (ev) => {
-        document.getElementById('days').value = parseInt(document.getElementById('days').value) - 1;
-        document.getElementById('days').oninput();
-    }
-
-
-    OPTIONS.forEach(key => {
-        document.getElementById(key).oninput = debounced(300, renderLayer);
-        if (document.getElementById(key).type == undefined) {
-            document.getElementsByName(key).forEach(el => {
-                el.oninput = debounced(300, renderLayer)
-            })
-        }
-    });
+    setupUiControls(renderLayer);
 
     function getHashQueryString() {
         return new URLSearchParams(window.location.hash.substr(1))
