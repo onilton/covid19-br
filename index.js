@@ -56,22 +56,22 @@ const COLOR_SCALE2 = [
     [128, 0, 38]
 ];
 
-const Reds = ["#fff5f0","#fee0d2","#fcbba1","#fc9272","#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"].map(hexToRgb);
+const Reds = ["#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"].map(hexToRgb);
 // Reds[0] = Reds[0].concat([100])
 
-const PuRd = ["#f7f4f9","#e7e1ef","#d4b9da","#c994c7","#df65b0","#e7298a","#ce1256","#980043","#67001f"].map(hexToRgb);
-PuRd[0] =  PuRd[0].concat([50])
+const PuRd = ["#f7f4f9", "#e7e1ef", "#d4b9da", "#c994c7", "#df65b0", "#e7298a", "#ce1256", "#980043", "#67001f"].map(hexToRgb);
+PuRd[0] = PuRd[0].concat([50])
 
 const YlOrRd = [
-    [128,0,38],
-    [189,0,38],
-    [227,26,28],
-    [252,78,42],
-    [253,141,60],
-    [254,178,76],
-    [254,217,118],
-    [255,237,160],
-    [255,255,204]
+    [128, 0, 38],
+    [189, 0, 38],
+    [227, 26, 28],
+    [252, 78, 42],
+    [253, 141, 60],
+    [254, 178, 76],
+    [254, 217, 118],
+    [255, 237, 160],
+    [255, 255, 204]
 ].reverse();
 
 // const RdOpacity = [
@@ -99,24 +99,23 @@ function daysFromPandemicStart() {
     const _MS_PER_DAY = 1000 * 60 * 60 * 24;
 
     return Math.floor((Date.now() - pandemicStart()) / _MS_PER_DAY);
-
 }
 
 function loadCSV(file) {
     return new Promise(function (resolve, reject) {
-        d3.csv(file, function(error, request) {
-            if(error) {
-               reject(error);
+        d3.csv(file, function (error, request) {
+            if (error) {
+                reject(error);
             } else {
-               resolve(request);
+                resolve(request);
             }
-         });
-     });
- }
+        });
+    });
+}
 
- let csvCovidDataPromise = null
+let csvCovidDataPromise = null
 
- // Get covid data
+// Get covid data
 async function fetchCovidCsvData() {
     if (csvCovidDataPromise == null) {
         csvCovidDataPromise = loadCSV("https://raw.githubusercontent.com/onilton/covid19-br/master/caso_full.csv").then(csvCovidData => {
@@ -223,13 +222,14 @@ var groupedAllCities = {}
 
 var maxMetricValue = undefined;
 
+
 async function doIt() {
     const metrics = {
         confirmed: { name: "last_available_confirmed", elevationMultiplier: 500, baseElevationMultiplier: 1 },
         deaths: { name: "last_available_deaths", elevationMultiplier: 1000, baseElevationMultiplier: 1000 },
         confirmed_per_100k_inhabitants: { name: "last_available_confirmed_per_100k_inhabitants", elevationMultiplier: 3000, baseElevationMultiplier: 1000 },
         population: { name: "estimated_population_2019", elevationMultiplier: 0.9, baseElevationMultiplier: 0 },
-        deaths_per_100k: { name: "deaths_per_100k", elevationMultiplier: 12000, baseElevationMultiplier: 2000}
+        deaths_per_100k: { name: "deaths_per_100k", elevationMultiplier: 12000, baseElevationMultiplier: 2000 }
     }
 
 
@@ -310,7 +310,7 @@ async function doIt() {
     }
 
     window.addEventListener("hashchange", () => {
-        setOptionsInForm(Object.assign({},defaultValuesForOptions, getOptionsFromHash()));
+        setOptionsInForm(Object.assign({}, defaultValuesForOptions, getOptionsFromHash()));
     }, false);
 
     function getOptionsFromHash() {
@@ -411,9 +411,9 @@ async function doIt() {
         const mapStyle = `mapbox://styles/mapbox/${mapStyleVersion}-v9`;
 
         if (options.darkMode) {
-            document.body.className="bootstrap-dark";
+            document.body.className = "bootstrap-dark";
         } else {
-            document.body.className="bootstrap";
+            document.body.className = "bootstrap";
         }
 
         console.log('groupedCovidCities');
@@ -433,8 +433,8 @@ async function doIt() {
 
         const opacityValue = parseFloat(options.opacity) / 100
 
-        const elevationMultiplier = options.elevationMultiplier >= 0 ? options.elevationMultiplier  : metric.elevationMultiplier
-        maxMetricValue = Object.values(groupedAllCities).map(it => it[0][colorMetric.name] || 0).reduce(function(a, b) {
+        const elevationMultiplier = options.elevationMultiplier >= 0 ? options.elevationMultiplier : metric.elevationMultiplier
+        maxMetricValue = Object.values(groupedAllCities).map(it => it[0][colorMetric.name] || 0).reduce(function (a, b) {
             return Math.max(a, b);
         });
 
@@ -471,7 +471,7 @@ async function doIt() {
             getFilterValue: f => {
                 const metricValue = groupedAllCities[f.properties.codarea][0][metric.name] || 0
                 const sameStateInt = groupedAllCities[f.properties.codarea][0].state == options.state ? 1 : 0
-                return [ parseInt(metricValue), sameStateInt ]
+                return [parseInt(metricValue), sameStateInt]
 
             },
             filterRange: filterRange,
@@ -514,7 +514,7 @@ async function doIt() {
     }
 
     function poorManTemplate(tmpl, ...arguments) {
-        return arguments.reduce((p,c) => p.replace(/%s/,c), tmpl);
+        return arguments.reduce((p, c) => p.replace(/%s/, c), tmpl);
     }
 
     function getTooltip({ object }) {
@@ -527,7 +527,7 @@ async function doIt() {
                     data.state,
                     data.last_available_deaths || 0,
                     data.last_available_confirmed || 0,
-                    data.last_available_confirmed_per_100k_inhabitants || 0 ,
+                    data.last_available_confirmed_per_100k_inhabitants || 0,
                     data.deaths_per_100k || 0,
                     data.last_available_date || '',
                     data.estimated_population_2019 || '',
