@@ -191,6 +191,10 @@ async function fetchLocationInfo(stateId) {
     return await fetchJson(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${stateId}/distritos`)
 }
 
+async function fetchAllLocationInfo(stateId) {
+    return await fetchJson(`https://servicodados.ibge.gov.br/api/v1/localidades/distritos`)
+}
+
 function getGroupedAllCities(locationInfo, cityName) {
     const locationInfo2 = locationInfo.map(location => {
         return {
@@ -367,8 +371,7 @@ async function doIt() {
     const centroidByUf = Object.fromEntries(ufsGeoData.features.map(feature => [ feature.properties.codarea, feature.properties.centroide ]))
 
     let locationGeoData = await fetchLocationGeoData(malhaId);
-    const allLocationInfo = await Promise.all(stateIds.map(stateId => fetchLocationInfo(stateId)));
-    let locationInfo = _.flatten(allLocationInfo, true);
+    let locationInfo = await fetchAllLocationInfo()
     let originalGroupedAllCities = getGroupedAllCities(locationInfo);
     let groupedAllCities = JSON.parse(JSON.stringify(originalGroupedAllCities));
 
