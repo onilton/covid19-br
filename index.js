@@ -358,14 +358,9 @@ async function doIt() {
     let metric = metrics.confirmed
     let colorMetric = metrics.confirmed
 
-    // let stateUFs = ["AM", "PA"]
-    // let stateUFs = ["RO","AC","AM","RR","PA","AP","TO"]
-    let stateUFs =
-        UFsbyRegionSigla["N"].concat(UFsbyRegionSigla["NE"]).concat(UFsbyRegionSigla["SE"]).concat(UFsbyRegionSigla["S"]).concat(UFsbyRegionSigla["CO"])
-    let stateIds = stateUFs.map(stateUF => stateIdByUF[stateUF])
-    // let malhaId = regionIdBySigla["N"];
-    let malhaId = "";
-    console.log(stateUFs)
+
+    let stateUFs = UFsbyRegionSigla["N"].concat(UFsbyRegionSigla["NE"]).concat(UFsbyRegionSigla["SE"]).concat(UFsbyRegionSigla["S"]).concat(UFsbyRegionSigla["CO"])
+    const malhaId = "";
 
     const ufsGeoData = await fetchUFsGeoData();
     const centroidByUf = Object.fromEntries(ufsGeoData.features.map(feature => [ feature.properties.codarea, feature.properties.centroide ]))
