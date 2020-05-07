@@ -1,4 +1,4 @@
-const OPTIONS = ['state', 'darkMode', 'removeZeroes', 'barMetric', 'colorMetric', 'days', 'elevationMultiplier', 'opacity', 'wireframe'];
+const OPTIONS = ['state', 'darkMode', 'removeZeroes', 'barMetric', 'colorMetric', 'days', 'elevationMultiplier', 'opacity', 'wireframe', 'colorScale'];
 
 var stateIdByUF = { "RO": 11, "AC": 12, "AM": 13, "RR": 14, "PA": 15, "AP": 16, "TO": 17, "MA": 21, "PI": 22, "CE": 23, "RN": 24, "PB": 25, "PE": 26, "AL": 27, "SE": 28, "BA": 29, "MG": 31, "ES": 32, "RJ": 33, "SP": 35, "PR": 41, "SC": 42, "RS": 43, "MS": 50, "MT": 51, "GO": 52, "DF": 53 }
 
@@ -57,7 +57,7 @@ const COLOR_SCALE2 = [
 ];
 
 const Reds = ["#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"].map(hexToRgb);
-// Reds[0] = Reds[0].concat([100])
+Reds[0] = Reds[0].concat([50])
 
 const PuRd = ["#f7f4f9", "#e7e1ef", "#d4b9da", "#c994c7", "#df65b0", "#e7298a", "#ce1256", "#980043", "#67001f"].map(hexToRgb);
 PuRd[0] = PuRd[0].concat([50])
@@ -73,6 +73,7 @@ const YlOrRd = [
     [255, 237, 160],
     [255, 255, 204]
 ].reverse();
+YlOrRd[0] = YlOrRd[0].concat([50])
 
 // const RdOpacity = [
 //     [128,0,38, 255],
@@ -86,10 +87,14 @@ const YlOrRd = [
 //     [128,0,38, 0]
 // ].reverse();
 
-const COLOR_SCALE = PuRd
+const colorScales = {
+    PuRd,
+    YlOrRd,
+    Reds,
+}
 
+let colorScale = PuRd
 
-console.log(COLOR_SCALE);
 
 function pandemicStart() {
     return new Date(2020, 02 - 1, 26);
@@ -409,8 +414,8 @@ async function main() {
         console.log("filterRange")
         console.log(filterRange);
 
+        colorScale = colorScales[options.colorScale]
         console.log("COLOR_SCALE.length")
-        console.log(COLOR_SCALE.length)
 
         metric = metrics[options.barMetric]
         colorMetric = metrics[options.colorMetric]
@@ -475,7 +480,7 @@ async function main() {
             locMetric = outLocMetric
         }
 
-        const maxScaleIdx = COLOR_SCALE.length - 2;
+        const maxScaleIdx = colorScale.length - 2;
 
         const logValue = (Math.log2(locMetric) / Math.log2(maxMetricValue)) * maxScaleIdx
 
@@ -495,7 +500,7 @@ async function main() {
             return idx
         }
 
-        return COLOR_SCALE[idx]
+        return colorScale[idx]
     }
 
     function poorManTemplate(tmpl, ...arguments) {
@@ -517,7 +522,7 @@ async function main() {
                     data.last_available_date || '',
                     data.estimated_population_2019 || '',
                     logColorScale(data[colorMetric.name], maxMetricValue, true),
-                    COLOR_SCALE.length - 1)
+                    colorScale.length - 1)
             };
         }
     }
