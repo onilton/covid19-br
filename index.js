@@ -179,6 +179,10 @@ async function fetchJson(url) {
     return await rsp.json();
 }
 
+async function fetchUFsGeoData() {
+    return await fetchJson(`https://servicodados.ibge.gov.br/api/v2/malhas/?resolucao=2&formato=application/vnd.geo+json`)
+}
+
 async function fetchLocationGeoData(malhaId) {
     return await fetchJson(`https://servicodados.ibge.gov.br/api/v2/malhas/${malhaId}?resolucao=5&formato=application/vnd.geo+json`)
 }
@@ -361,6 +365,8 @@ async function doIt() {
     let malhaId = "";
     console.log(stateUFs)
 
+    let ufsGeoData = await fetchUFsGeoData();
+    const centroidByUf = Object.fromEntries(ufsGeoData.features.map(feature => [ feature.properties.codarea, feature.properties.centroide ]))
 
     let locationGeoData = await fetchLocationGeoData(malhaId);
     const allLocationInfo = await Promise.all(stateIds.map(stateId => fetchLocationInfo(stateId)));
@@ -370,17 +376,17 @@ async function doIt() {
 
 
 
-
-    const deckgl = new deck.DeckGL({
-        mapboxApiAccessToken: 'pk.eyJ1Ijoib25pbHRvbiIsImEiOiJjazk5ZjZ0bjQwdXpqM2txeGFlMmQzMjZuIn0.vvNzNb-52JjOo59Eqmq7Tg',
-        mapStyle: getMapStyle(getOptionsFromForm().darkMode),
-        initialViewState: {
-            latitude: -15.254,
+    const initialViewForAll = {
             longitude: -51.13,
+            latitude: -15.254,
             zoom: 4,
             maxZoom: 9,
             pitch: 45
-        },
+    }
+    const deckgl = new deck.DeckGL({
+        mapboxApiAccessToken: 'pk.eyJ1Ijoib25pbHRvbiIsImEiOiJjazk5ZjZ0bjQwdXpqM2txeGFlMmQzMjZuIn0.vvNzNb-52JjOo59Eqmq7Tg',
+        mapStyle: getMapStyle(getOptionsFromForm().darkMode),
+        initialViewState: initialViewForAll,
         controller: true,
         getTooltip
     });
@@ -436,6 +442,19 @@ async function doIt() {
 
         const zeroesFilterRange = options.removeZeroes ? [1, Number.MAX_SAFE_INTEGER] : [0, Number.MAX_SAFE_INTEGER];
         const stateFilterRange = options.state == 'All' ? [0, 1] : [1, 1];
+
+        let initialView = initialViewForAll
+        if (options.state != 'All') {
+            const centroid = centroidByUf[stateIdByUF[options.state]];
+            initialView = {
+                longitude:  centroid[0] ,
+                latitude: centroid[1],
+                zoom: 6,
+                maxZoom: 9,
+                pitch: 55
+            }
+        }
+
         const filterRange = [zeroesFilterRange, stateFilterRange];
         console.log("filterRange")
         console.log(filterRange);
@@ -494,6 +513,7 @@ async function doIt() {
 
         deckgl.setProps({
             layers: [geojsonLayer],
+            initialViewState: initialView,
         });
 
         deckgl.getMapboxMap().setStyle(getMapStyle(options.darkMode));
