@@ -353,8 +353,6 @@ async function doIt() {
 
     let metric = metrics.confirmed
     let colorMetric = metrics.confirmed
-    const elevationMultiplier = 500
-    const removeZeroes = true
 
     // let stateUFs = ["AM", "PA"]
     // let stateUFs = ["RO","AC","AM","RR","PA","AP","TO"]
@@ -390,10 +388,6 @@ async function doIt() {
         controller: true,
         getTooltip
     });
-
-
-
-
 
     await renderLayer();
 
@@ -431,11 +425,7 @@ async function doIt() {
             }
         });
 
-        const mapStyleVersion = options.darkMode ? 'dark' : 'light';
-        const mapStyle = `mapbox://styles/mapbox/${mapStyleVersion}-v9`;
         setDarkMode(options.darkMode);
-
-
 
         console.log('groupedCovidCities');
         console.log(Object.keys(groupedCovidCities).length);
