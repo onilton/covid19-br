@@ -130,30 +130,7 @@ async function fetchCovidCsvData() {
     return await csvCovidDataPromise;
 }
 
-// Get covid data
-async function fetchCovidResults(stateUF, date) {
-    const baseData = await fetchCovidCsvData();
-    const stateData = baseData[date].filter(i => i.state == stateUF)
-    console.log(stateUF)
-    console.log(stateData)
-    return stateData;
-}
-
-// Get covid data
-async function oldFetchCovidResults(stateUF, date) {
-    let url = "https://brasil.io/api/dataset/covid19/caso/data?state=" + stateUF
-    if (date) {
-        url += "&date=" + date;
-    } else {
-        url += "&is_last=True";
-    }
-
-    const rsp = await fetch(url)
-    const json = await rsp.json();
-    return json.results;
-}
-
-async function fetchCovidDataByCityId(dateStr) {
+async function fetchCovidData(dateStr) {
     const baseData = await fetchCovidCsvData();
     let covidResults = baseData[dateStr]
     var covidCities = covidResults.filter(city => city.city != null)
@@ -398,7 +375,7 @@ async function main() {
         console.log(options.days)
         console.log(dateStr)
 
-        const covidDataByCityId = await fetchCovidDataByCityId(dateStr)
+        const covidDataByCityId = await fetchCovidData(dateStr)
 
         infoByCityId = JSON.parse(rawInfoByCityId);
 
