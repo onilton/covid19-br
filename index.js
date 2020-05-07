@@ -329,7 +329,7 @@ var maxMetricValue = undefined;
 
 
 
-async function doIt() {
+async function main() {
     setupUiControls(renderLayer);
 
 
@@ -548,5 +548,5 @@ async function doIt() {
 }
 
 window.onload = function() {
-    doIt();
+    main();
 }
