@@ -390,7 +390,7 @@ async function main() {
 
         console.log(options)
 
-        const date = new Date(2020, 02 - 1, 26);
+        const date = pandemicStart();
         date.setDate(date.getDate() + parseInt(options.days));
         const dateStr = date.toISOString().slice(0, 10);
 
