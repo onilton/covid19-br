@@ -367,13 +367,13 @@ async function doIt() {
     let malhaId = "";
     console.log(stateUFs)
 
-    let ufsGeoData = await fetchUFsGeoData();
+    const ufsGeoData = await fetchUFsGeoData();
     const centroidByUf = Object.fromEntries(ufsGeoData.features.map(feature => [ feature.properties.codarea, feature.properties.centroide ]))
 
-    let locationGeoData = await fetchLocationGeoData(malhaId);
-    let locationInfo = await fetchAllLocationInfo()
-    let originalInfoByCityId = getGroupedAllCities(locationInfo);
-    let rawInfoByCityId = JSON.stringify(originalInfoByCityId);
+    const locationGeoData = await fetchLocationGeoData(malhaId);
+    const locationInfo = await fetchAllLocationInfo()
+    const originalInfoByCityId = getGroupedAllCities(locationInfo);
+    const rawInfoByCityId = JSON.stringify(originalInfoByCityId);
     let infoByCityId = JSON.parse(rawInfoByCityId);
 
 
@@ -418,7 +418,7 @@ async function doIt() {
         console.log(options.days)
         console.log(dateStr)
 
-        var covidDataByCityId = await fetchCovidCities(stateUFs, dateStr)
+        const covidDataByCityId = await fetchCovidCities(stateUFs, dateStr)
 
         infoByCityId = JSON.parse(rawInfoByCityId);
 
