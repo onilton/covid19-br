@@ -372,8 +372,8 @@ async function doIt() {
 
     let locationGeoData = await fetchLocationGeoData(malhaId);
     let locationInfo = await fetchAllLocationInfo()
-    let originalGroupedAllCities = getGroupedAllCities(locationInfo);
-    let groupedAllCities = JSON.parse(JSON.stringify(originalGroupedAllCities));
+    let originalInfoByCityId = getGroupedAllCities(locationInfo);
+    let infoByCityId = JSON.parse(JSON.stringify(originalInfoByCityId));
 
 
 
@@ -417,21 +417,21 @@ async function doIt() {
         console.log(options.days)
         console.log(dateStr)
 
-        var groupedCovidCities = await fetchCovidCities(stateUFs, dateStr)
+        var covidDataByCityId = await fetchCovidCities(stateUFs, dateStr)
 
 
-        groupedAllCities = JSON.parse(JSON.stringify(originalGroupedAllCities));
+        infoByCityId = JSON.parse(JSON.stringify(originalInfoByCityId));
 
-        Object.keys(originalGroupedAllCities).map(function (key, index) {
-            if (key in groupedCovidCities) {
-                groupedAllCities[key] = groupedCovidCities[key];
+        Object.keys(infoByCityId).map(function (key, index) {
+            if (key in covidDataByCityId) {
+                infoByCityId[key] = covidDataByCityId[key];
             }
         });
 
         setDarkMode(options.darkMode);
 
-        console.log('groupedCovidCities');
-        console.log(Object.keys(groupedCovidCities).length);
+        console.log('originalInfoByCityId');
+        console.log(Object.keys(covidDataByCityId).length);
 
         const zeroesFilterRange = options.removeZeroes ? [1, Number.MAX_SAFE_INTEGER] : [0, Number.MAX_SAFE_INTEGER];
         const stateFilterRange = options.state == 'All' ? [0, 1] : [1, 1];
@@ -461,7 +461,7 @@ async function doIt() {
         const opacityValue = parseFloat(options.opacity) / 100
 
         const elevationMultiplier = options.elevationMultiplier >= 0 ? options.elevationMultiplier : metric.elevationMultiplier
-        maxMetricValue = Object.values(groupedAllCities).map(it => it[0][colorMetric.name] || 0).reduce(function (a, b) {
+        maxMetricValue = Object.values(infoByCityId).map(it => it[0][colorMetric.name] || 0).reduce(function (a, b) {
             return Math.max(a, b);
         });
 
@@ -479,25 +479,25 @@ async function doIt() {
             fp64: true,
 
             getElevation: f => {
-                const metricValue = groupedAllCities[f.properties.codarea][0][metric.name]
+                const metricValue = infoByCityId[f.properties.codarea][0][metric.name]
 
                 return metricValue * elevationMultiplier + Math.ceil(Math.max(1, metricValue)) * metric.baseElevationMultiplier
             },
 
-            getFillColor: f => logColorScale(groupedAllCities[f.properties.codarea][0][colorMetric.name], maxMetricValue),
+            getFillColor: f => logColorScale(infoByCityId[f.properties.codarea][0][colorMetric.name], maxMetricValue),
 
             pickable: true,
             updateTriggers: {
-                getElevation: [metric, groupedAllCities, date, options],
-                getFillColor: [metric, groupedAllCities, date, options, colorMetric],
-                getFilterValue: [metric, groupedAllCities, date, options],
-                filterRange: [metric, groupedAllCities, date, options],
+                getElevation: [metric, infoByCityId, date, options],
+                getFillColor: [metric, infoByCityId, date, options, colorMetric],
+                getFilterValue: [metric, infoByCityId, date, options],
+                filterRange: [metric, infoByCityId, date, options],
 
             },
             extensions: [new deck.DataFilterExtension({ filterSize: 2 })],
             getFilterValue: f => {
-                const metricValue = groupedAllCities[f.properties.codarea][0][metric.name] || 0
-                const sameStateInt = groupedAllCities[f.properties.codarea][0].state == options.state ? 1 : 0
+                const metricValue = infoByCityId[f.properties.codarea][0][metric.name] || 0
+                const sameStateInt = infoByCityId[f.properties.codarea][0].state == options.state ? 1 : 0
                 return [parseInt(metricValue), sameStateInt]
 
             },
@@ -547,7 +547,7 @@ async function doIt() {
 
     function getTooltip({ object }) {
         if (object) {
-            const data = groupedAllCities[object.properties.codarea][0];
+            const data = infoByCityId[object.properties.codarea][0];
 
             return {
                 html: poorManTemplate(tooltipTmpl,
