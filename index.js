@@ -373,7 +373,8 @@ async function doIt() {
     let locationGeoData = await fetchLocationGeoData(malhaId);
     let locationInfo = await fetchAllLocationInfo()
     let originalInfoByCityId = getGroupedAllCities(locationInfo);
-    let infoByCityId = JSON.parse(JSON.stringify(originalInfoByCityId));
+    let rawInfoByCityId = JSON.stringify(originalInfoByCityId);
+    let infoByCityId = JSON.parse(rawInfoByCityId);
 
 
 
@@ -419,8 +420,7 @@ async function doIt() {
 
         var covidDataByCityId = await fetchCovidCities(stateUFs, dateStr)
 
-
-        infoByCityId = JSON.parse(JSON.stringify(originalInfoByCityId));
+        infoByCityId = JSON.parse(rawInfoByCityId);
 
         Object.keys(infoByCityId).map(function (key, index) {
             if (key in covidDataByCityId) {
