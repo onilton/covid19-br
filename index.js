@@ -195,7 +195,7 @@ async function fetchAllLocationInfo(stateId) {
     return await fetchJson(`https://servicodados.ibge.gov.br/api/v1/localidades/distritos`)
 }
 
-function getGroupedAllCities(locationInfo, cityName) {
+function getGroupedAllCities(locationInfo) {
     const locationInfo2 = locationInfo.map(location => {
         return {
             "city": location.municipio.nome,
