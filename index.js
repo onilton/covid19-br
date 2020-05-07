@@ -200,9 +200,6 @@ function getGroupedAllCities(locationInfo, cityName) {
         return {
             "city": location.municipio.nome,
             "city_ibge_code": location.municipio.id,
-            "confirmed": 0,
-            "deaths": 0,
-            "confirmed_per_100k_inhabitants": 0,
             "state": location.municipio.microrregiao.mesorregiao.UF.sigla
         }
     });
