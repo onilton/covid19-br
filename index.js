@@ -153,21 +153,11 @@ async function oldFetchCovidResults(stateUF, date) {
     return json.results;
 }
 
-const covidCitiesCache = {}
-
-async function fetchCovidCities(stateUFs, dateStr) {
-    if (stateUFs in covidCitiesCache && dateStr in covidCitiesCache[stateUFs]) {
-        return covidCitiesCache[stateUFs][dateStr];
-    }
-    let allCovidResults = await Promise.all(stateUFs.map(stateUF => fetchCovidResults(stateUF, dateStr)));
-    let covidResults = _.flatten(allCovidResults, true)
+async function fetchCovidDataByCityId(dateStr) {
+    const baseData = await fetchCovidCsvData();
+    let covidResults = baseData[dateStr]
     var covidCities = covidResults.filter(city => city.city != null)
     const groupedCovidCities = _.groupBy(covidCities, city => city.city_ibge_code)
-    if (!(stateUFs in covidCitiesCache)) {
-        covidCitiesCache[stateUFs] = {}
-    }
-
-    covidCitiesCache[stateUFs][dateStr] = groupedCovidCities;
 
     return groupedCovidCities;
 }
@@ -355,8 +345,6 @@ async function doIt() {
     let metric = metrics.confirmed
     let colorMetric = metrics.confirmed
 
-
-    let stateUFs = UFsbyRegionSigla["N"].concat(UFsbyRegionSigla["NE"]).concat(UFsbyRegionSigla["SE"]).concat(UFsbyRegionSigla["S"]).concat(UFsbyRegionSigla["CO"])
     const malhaId = "";
 
     const ufsGeoData = await fetchUFsGeoData();
@@ -410,7 +398,7 @@ async function doIt() {
         console.log(options.days)
         console.log(dateStr)
 
-        const covidDataByCityId = await fetchCovidCities(stateUFs, dateStr)
+        const covidDataByCityId = await fetchCovidDataByCityId(dateStr)
 
         infoByCityId = JSON.parse(rawInfoByCityId);
 
