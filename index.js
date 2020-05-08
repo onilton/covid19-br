@@ -148,7 +148,7 @@ async function fetchCovidData(dateStr) {
     if (!covidResults) {
         covidResults = getDataOfLastAvailableDate(baseData);
     }
-    var covidCities = covidResults.filter(city => city.city != null)
+    const covidCities = covidResults.filter(city => city.city != null)
     const groupedCovidCities = _.groupBy(covidCities, city => city.city_ibge_code)
 
     return groupedCovidCities;
