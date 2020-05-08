@@ -123,7 +123,7 @@ let csvCovidDataPromise = null
 // Get covid data
 async function fetchCovidCsvData() {
     if (csvCovidDataPromise == null) {
-        csvCovidDataPromise = loadCSV("https://raw.githubusercontent.com/onilton/covid19-br/master/caso_full.csv").then(csvCovidData => {
+        csvCovidDataPromise = loadCSV("https://raw.githubusercontent.com/onilton/covid19-br/datasets/caso_full.csv").then(csvCovidData => {
             csvCovidData.forEach(row => {
                 row.deaths_per_100k = (100000 * parseInt(row.last_available_deaths)) / parseInt(row.estimated_population_2019)
             })
