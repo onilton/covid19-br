@@ -47,7 +47,7 @@ jobs:
       with:
         message: "Updated caso_full.csv"
         add: "caso_full.csv"
-        ref: gh-pages
+        ref: datasets
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #  GITHUB_REF: refs/heads/gh-pages
