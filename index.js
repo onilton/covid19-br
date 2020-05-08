@@ -513,6 +513,9 @@ async function main() {
             let deaths_per_100k = data.deaths_per_100k || 0;
             deaths_per_100k = parseFloat(deaths_per_100k).toFixed(2);
 
+            const debugStr = ""
+            // const debugStr = "Idx:" + logColorScale(data[colorMetric.name], maxMetricValue, true) + "/" + (colorScale.length - 1)
+
             return {
                 html: poorManTemplate(tooltipTmpl,
                     data.city,
@@ -523,8 +526,7 @@ async function main() {
                     deaths_per_100k || 0,
                     data.last_available_date || '',
                     data.estimated_population_2019 || '',
-                    logColorScale(data[colorMetric.name], maxMetricValue, true),
-                    colorScale.length - 1)
+                    debugStr)
             };
         }
     }
