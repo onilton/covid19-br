@@ -43,8 +43,7 @@ jobs:
         echo Add other actions to build,
         echo test, and deploy your project.
     - name: Commit changes
-      # uses: EndBug/add-and-commit@v4 see https://github.com/EndBug/add-and-commit/issues/27
-      uses: RobinWijnant/add-and-commit@master
+      uses: EndBug/add-and-commit@v4
       with:
         message: "Updated caso_full.csv"
         add: "caso_full.csv"
