@@ -2,9 +2,9 @@
 <html>
 
 <head>
-    <title>Covid-19 in Brasil</title>
+    <title>Covid-19 in cities of Brasil</title>
 
-    <link rel="stylesheet" media="all" href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css">
+    <link rel="stylesheet" media="all" href="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.css">
     <link rel="stylesheet" media="all" href="https://unpkg.com/@forevolve/bootstrap-dark@1.0.0-alpha.981/dist/css/toggle-bootstrap.min.css">
     <link rel="stylesheet" media="all" href="https://unpkg.com/@forevolve/bootstrap-dark@1.0.0-alpha.981/dist/css/toggle-bootstrap-dark.min.css">
 
@@ -47,8 +47,8 @@
         });
     </script>
 
-    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
-    <script src="https://unpkg.com/deck.gl@7.3.15/dist.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.js"></script>
+    <script src="https://unpkg.com/deck.gl@8.1.4/dist.min.js"></script>
     <script src="https://cdn.jsdelivr.net/lodash/4.17.2/lodash.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
@@ -65,7 +65,9 @@
                     Deaths: %s <br>
                     Confirmed Cases: %s <br>
                     Cases per 100k inhabitants: %s <br>
+                    Deaths per 100k inhabitants: %s <br>
                     Date: %s <br>
+                    Inhabitants: %s <br>
                     <br>
                     <b>Click</b> for more info.
                     <br>Debug:
@@ -76,62 +78,115 @@
 </head>
 
 <body class="bootstrap" >
+    <div id="outdated"></div>
     <div id="tooltip"></div>
     <div id="control-panel">
-        <h4>Covid-19 in Brasil</h4>
-        <form id="control-form">
-            <div class="form-group">
-                <div class="custom-control custom-switch">
-                    <input class="custom-control-input" id="darkMode" name="darkMode" type="checkbox"></input>
-                    <label class="custom-control-label" class="form-check-label" for="darkMode">Dark Mode</label>
+        <h4>Covid-19 in cities of Brasil</h4>
+        <div id="loading" class="d-flex justify-content-center mt-5 mb-5" style="width:384px" >
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <form id="control-form" class="pt-2" style="display:none" >
+            <div class="form-group form-row">
+                <label class="col-sm-2 col-form-label" for="state">State</label>
+                <div class="col-sm-10">
+                    <select id="state" class="custom-select">
+                        <option value="All">All</option>
+                        <option value="AC">AC</option>
+                        <option value="AL">AL</option>
+                        <option value="AM">AM</option>
+                        <option value="AP">AP</option>
+                        <option value="BA">BA</option>
+                        <option value="CE">CE</option>
+                        <option value="DF">DF</option>
+                        <option value="ES">ES</option>
+                        <option value="GO">GO</option>
+                        <option value="MA">MA</option>
+                        <option value="MG">MG</option>
+                        <option value="MS">MS</option>
+                        <option value="MT">MT</option>
+                        <option value="PA">PA</option>
+                        <option value="PB">PB</option>
+                        <option value="PE">PE</option>
+                        <option value="PI">PI</option>
+                        <option value="PR">PR</option>
+                        <option value="RJ">RJ</option>
+                        <option value="RN">RN</option>
+                        <option value="RO">RO</option>
+                        <option value="RR">RR</option>
+                        <option value="RS">RS</option>
+                        <option value="SC">SC</option>
+                        <option value="SE">SE</option>
+                        <option value="SP">SP</option>
+                        <option value="TO">TO</option>
+                    </select>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="custom-control custom-switch">
-                    <input class="custom-control-input" id="removeZeroes" name="removeZeroes" type="checkbox"></input>
-                    <label class="custom-control-label" class="form-check-label" for="removeZeroes">Hide cities without cases/deaths</label>
+            <fieldset class="form-group">
+                <div class="form-row">
+                    <legend class="col-form-label col-sm-2 pt-0">Bar</legend>
+                    <div id="barMetric" class="col">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio1"
+                                value="confirmed" checked>
+                            <label class="custom-control-label" for="inlineRadio1">Cases</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio2" value="deaths">
+                            <label class="custom-control-label" for="inlineRadio2">Deaths</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio3"
+                                value="confirmed_per_100k">
+                            <label class="custom-control-label" for="inlineRadio3">Cases / 100k</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio5"
+                                value="deaths_per_100k">
+                            <label class="custom-control-label" for="inlineRadio5">Deaths / 100k</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio4"
+                                value="population">
+                            <label class="custom-control-label" for="inlineRadio4">Habitantes</label>
+                        </div>
+                    </div>
+                    <legend class="col-form-label col-auto pt-0">Color</legend>
+                    <div id="colorMetric" class="col">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric1"
+                                value="confirmed" checked>
+                            <label class="custom-control-label" for="inlineColorMetric1">Cases</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric2"
+                                value="deaths">
+                            <label class="custom-control-label" for="inlineColorMetric2">Deaths</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric3"
+                                value="confirmed_per_100k">
+                            <label class="custom-control-label" for="inlineColorMetric3">Cases / 100k</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric5"
+                                value="deaths_per_100k">
+                            <label class="custom-control-label" for="inlineColorMetric5">Deaths / 100k</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric4"
+                                value="population">
+                            <label class="custom-control-label" for="inlineColorMetric4">Habitantes</label>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div id="barMetric" class="form-group">
-                <label class="form-check-label">Bar metric: </label>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio1"
-                        value="confirmed" checked>
-                    <label class="custom-control-label" for="inlineRadio1">Confirmed</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio2" value="deaths">
-                    <label class="custom-control-label" for="inlineRadio2">Deaths</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input class="custom-control-input" type="radio" name="barMetric" id="inlineRadio3"
-                        value="confirmed_per_100k_inhabitants">
-                    <label class="custom-control-label" for="inlineRadio3">Confirmed / 100k</label>
-                </div>
-            </div>
-            <div id="colorMetric" class="form-group">
-                <label class="form-check-label">Color metric: </label>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric1"
-                        value="confirmed" checked>
-                    <label class="custom-control-label" for="inlineColorMetric1">Confirmed</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric2"
-                        value="deaths">
-                    <label class="custom-control-label" for="inlineColorMetric2">Deaths</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input class="custom-control-input" type="radio" name="colorMetric" id="inlineColorMetric3"
-                        value="confirmed_per_100k_inhabitants">
-                    <label class="custom-control-label" for="inlineColorMetric3">Confirmed / 100k</label>
-                </div>
-            </div>
-            <div class="form-group">
+            </fieldset>
+            <div class="form-group mb-1">
                 <label>Days from first case:&nbsp;</label><span id="days-value"></span>
                 <input id="days" class="custom-range" type="range" min="0" max="100" step="1" value="0"></input>
             </div>
-            <div class="form-group form-inline justify-content-center">
+            <div class="form-group form-inline justify-content-center mb-4">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <button id="previous-day" type="button" class="btn btn-primary day-button">&laquo;</button>
@@ -143,29 +198,61 @@
                 </div>
 
             </div>
-            <div class="form-group">
+            <div class="form-group form-row">
+                <div class="col-auto">
+                    <div class="custom-control custom-switch">
+                        <input class="custom-control-input" id="darkMode" name="darkMode" type="checkbox"></input>
+                        <label class="custom-control-label" class="form-check-label" for="darkMode">Dark Mode</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="custom-control custom-switch">
+                        <input class="custom-control-input" id="removeZeroes" name="removeZeroes" type="checkbox"></input>
+                        <label class="custom-control-label" class="form-check-label" for="removeZeroes">Hide cities without cases</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group border-top pt-3">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#aboutModal">
                     About
                 </button>
                 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAdvanced" aria-expanded="false" aria-controls="collapseAdvanced">
                   Advanced
                 </button>
+                <button class="btn btn-primary" type="button" id="reset">
+                    Reset
+                </button>
+                <a class="btn btn-primary" href="https://onilton.github.io/deck-covid19/" role="button">Português</a>
             </div>
               <div class="collapse" id="collapseAdvanced">
                 <div class="card card-body" style="max-width: 450px">
                     <div>
-                        <label>Elevation Multiplier</label>
-                        <input id="elevationMultiplier" type="range" min="-1" max="20000" step="1000" value="-1"></input>
-                        <span id="elevationMultiplier-value"></span>
+                        <label>Elevation Multiplier:&nbsp;</label><span id="elevationMultiplier-value"></span>
+                        <input id="elevationMultiplier" class="custom-range"  type="range" min="-1" max="20000" step="1000" value="-1"></input>
+
                     </div>
                     <div>
-                        <label>Opacity</label>
-                        <input id="opacity" type="range" min="0" max="100" step="1" value="80"></input>
-                        <span id="opacity-value"></span>
+                        <label>Opacity&nbsp;</label><span id="opacity-value"></span>
+                        <input id="opacity" class="custom-range"  type="range" min="0" max="100" step="1" value="80"></input>
                     </div>
-
-                </div>
+                    <div>
+                        <div class="custom-control custom-switch">
+                            <input class="custom-control-input" id="wireframe" name="wireframe" type="checkbox" checked ></input>
+                            <label class="custom-control-label" class="form-check-label" for="wireframe">Wireframe</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-row mt-2">
+                        <label class="col-sm-5 col-form-label" for="state">Colorscale</label>
+                        <div class="col-sm-7">
+                            <select id="colorScale" class="custom-select">
+                                <option value="PuRd">RoxoVermelho</option>
+                                <option value="YlOrRd">AmareloOuVermelho</option>
+                                <option value="Reds">Vermelhos</option>
+                            </select>
+                        </div>
+                    </div>
               </div>
+            </div>
 
 
         </form>
@@ -182,7 +269,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <h4>Covid-19 no Brasil</h4>
+                <h4>Covid-19 in cities of Brasil</h4>
                 <p>
                     O código dessa visualização pode ser encontrado em <a href="https://github.com/onilton/deck-covid19">https://github.com/onilton/deck-covid19</a>
                 </p>
@@ -193,6 +280,7 @@
                     Esta visualização foi construída por <a href="http://twitter.com/oniltonmaciel">Onilton Maciel</a>,
                     utilizando <a href="https://deck.gl/#/">deck.gl</a> com os números fornecidos pelas secretarias de saúde dos estados,
                     dados tratados e disponibilizados por <a href="https://brasil.io/">Brasil.io</a>.
+                    Malhas e outras informações disponibilizados pela <a href="https://servicodados.ibge.gov.br/">api do IBGE</a>.
                 </p>
                 <h5>Por quê?</h5>
                 <p>
@@ -211,7 +299,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
             </div>
         </div>
         </div>
