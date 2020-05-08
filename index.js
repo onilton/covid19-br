@@ -303,6 +303,10 @@ function setupUiControls(layerRenderingFunc) {
 
     const options = getOptionsFromForm();
     setDarkMode(options.darkMode)
+
+    document.getElementById('reset').onclick = () => {
+        window.location.hash = '';
+    }
 }
 
 var groupedAllCities = {}
