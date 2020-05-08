@@ -6,12 +6,11 @@ A visualization of the evolution of cases of Covid-19 in Brazil using deck.gl fo
 
 There are many graphs/maps, but few have a good view at the city level.
 
-Besides that, the elevation available through deck.gl helps to view some differencs in a clear way, especially in small cities that have a high population density.
-
+Besides that, the elevation available through deck.gl helps to view some differences in a clear way, especially in small cities that have a high population density.
 
 I always had trouble reading maps that only use a colorscale.
 
-Another interesting feature is to compare two different metrics in the same graph, i.e deaths/casess.
+Another interesting feature is to compare two different metrics in the same graph, i.e deaths/cases.
 
 #### How
 
