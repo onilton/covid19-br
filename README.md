@@ -4,7 +4,7 @@
 
 A visualization of the evolution of cases of Covid-19 in Brazil using deck.gl for the 3D effect. There are also other options to customize the presentation.
 
- <a href="https://onilton.github.io/deck-covid19/pt/">Ir para visualização</a>
+ <a href="https://onilton.github.io/deck-covid19/pt/">Go to visualization</a>
 
 #### Why?
 
