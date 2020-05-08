@@ -283,7 +283,7 @@ function setOptionsInForm(options) {
 
 function setupUiControls(layerRenderingFunc) {
     document.getElementById('days').max = daysFromPandemicStart();
-    document.getElementById('days').value = daysFromPandemicStart() - 1;
+    document.getElementById('days').value = daysFromPandemicStart();
 
     document.getElementById('next-day').onclick = (ev) => {
         document.getElementById('days').value = parseInt(document.getElementById('days').value) + 1;
