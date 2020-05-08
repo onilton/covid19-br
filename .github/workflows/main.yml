@@ -4,15 +4,15 @@ name: Download newest cases file
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
-on:
-  schedule:
-    - cron: "0 10,15,20,23 * * *"
+# on:
+#   schedule:
+#     - cron: "0 10,15,20,23 * * *"
 
 # For debugging
-#on:
-#  push:
-#    paths:
-#    - '**.yml'
+on:
+ push:
+   paths:
+   - '**.yml'
 
 #env:
 #  GITHUB_REF: refs/heads/gh-pages
@@ -28,8 +28,8 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    #  with:
-    #    ref: gh-pages
+      with:
+        ref: datasets
 
     # Runs a single command using the runners shell
     - name: Run a one-line script
@@ -47,6 +47,7 @@ jobs:
       with:
         message: "Updated caso_full.csv"
         add: "caso_full.csv"
+        ref: gh-pages
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #  GITHUB_REF: refs/heads/gh-pages
