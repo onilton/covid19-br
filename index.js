@@ -135,9 +135,19 @@ async function fetchCovidCsvData() {
     return await csvCovidDataPromise;
 }
 
+function getDataOfLastAvailableDate(baseData) {
+    const dates = Object.keys(baseData).sort()
+    const lastAvailableDate = dates[dates.length - 1 ]
+
+    return baseData[lastAvailableDate];
+}
+
 async function fetchCovidData(dateStr) {
     const baseData = await fetchCovidCsvData();
-    let covidResults = baseData[dateStr]
+    let covidResults = baseData[dateStr];
+    if (!covidResults) {
+        covidResults = getDataOfLastAvailableDate(baseData);
+    }
     var covidCities = covidResults.filter(city => city.city != null)
     const groupedCovidCities = _.groupBy(covidCities, city => city.city_ibge_code)
 
