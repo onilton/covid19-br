@@ -305,7 +305,8 @@ function setupUiControls(layerRenderingFunc) {
     setDarkMode(options.darkMode)
 
     document.getElementById('reset').onclick = () => {
-        window.location.hash = '';
+        setOptionsInForm(Object.assign({}, defaultValuesForOptions));
+        layerRenderingFunc();
     }
 }
 
