@@ -155,9 +155,7 @@ async function fetchCovidData(dateStr) {
 }
 
 async function fetchJson(url) {
-    console.log("start fetch " + url)
     const rsp = await fetch(url)
-    console.log("end fetch" + url)
     return await rsp.json();
 }
 
@@ -186,7 +184,6 @@ function getGroupedAllCities(locationInfo) {
         }
     });
 
-    console.log(locationInfo2)
     const groupedLocationInfo = _.groupBy(locationInfo2, loc => loc.city_ibge_code)
 
     return groupedLocationInfo;
@@ -378,22 +375,16 @@ async function main() {
     document.getElementById('control-form').style.display = "block";
 
     async function renderLayer() {
-        console.log("WILL RENDER LAYER")
-
         const options = getOptionsFromForm();
         Object.entries(options).forEach(([key, value]) => {
             setHashQueryString(key, value);
         });
-
-        console.log(options)
 
         const date = pandemicStart();
         date.setDate(date.getDate() + parseInt(options.days));
         const dateStr = date.toISOString().slice(0, 10);
 
         document.getElementById("current-day").value = dateStr
-        console.log(options.days)
-        console.log(dateStr)
 
         const covidDataByCityId = await fetchCovidData(dateStr)
 
@@ -406,9 +397,6 @@ async function main() {
         });
 
         setDarkMode(options.darkMode);
-
-        console.log('originalInfoByCityId');
-        console.log(Object.keys(covidDataByCityId).length);
 
         const zeroesFilterRange = options.removeZeroes ? [1, Number.MAX_SAFE_INTEGER] : [0, Number.MAX_SAFE_INTEGER];
         const stateFilterRange = options.state == 'All' ? [0, 1] : [1, 1];
@@ -426,11 +414,8 @@ async function main() {
         }
 
         const filterRange = [zeroesFilterRange, stateFilterRange];
-        console.log("filterRange")
-        console.log(filterRange);
 
         colorScale = colorScales[options.colorScale]
-        console.log("COLOR_SCALE.length")
 
         metric = metrics[options.barMetric]
         colorMetric = metrics[options.colorMetric]
@@ -441,9 +426,6 @@ async function main() {
         maxMetricValue = Object.values(infoByCityId).map(it => it[0][colorMetric.name] || 0).reduce(function (a, b) {
             return Math.max(a, b);
         });
-
-        console.log("maxMetricValue")
-        console.log(maxMetricValue)
 
         const geojsonLayer = new deck.GeoJsonLayer({
             data: locationGeoData,
