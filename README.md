@@ -1,46 +1,41 @@
- # Covid-19 nos municípios do Brasil usando deck.gl
+ # Covid-19 in cities of Brasil using deck.gl
 
-Uma visualização da evolução de casos de Covid-19 no Brasil usando deck.gl para o efeito 3D. Além disso, várias opções são apresentadas para customizar a apresentação.
+A visualization of the evolution of cases of Covid-19 in Brazil using deck.gl for the 3D effect. There are also other options to customize the presentation.
 
-#### Por quê?
+#### Why?
 
-Existem muitos gráficos/mapas parecidos, poucos com uma visualização boa a nível de município.
+There are many graphs/maps, but few have a good view at the city level.
 
+Besides that, the elevation available through deck.gl helps to view some differences in a clear way, especially in small cities that have a high population density.
 
-Além disso, a elevação possível com o deck.gl ajuda a visualizar algumas
-diferenças de forma mais clara, principalmente em municípios pequenos, mas com uma grande população.
+I always had trouble reading maps that only use a colorscale.
 
+Another interesting feature is to compare two different metrics in the same graph, i.e deaths/cases.
 
-Sempre tive um pouco dificuldade de ler os mapas que usam somente uma escala de cores.
+#### How
 
+Using <a href="https://deck.gl/#/">deck.gl</a> with the numbers provided by the health department of states. Data processed and made available by <a href="https://brasil.io/">Brasil.io</a>.
 
-Outra vantagem interessante é comparar duas métricas diferentes no mesmo gráfico, como por exemplo, mortes X casos.
-
-#### Como
-
-Utilizando <a href="https://deck.gl/#/">deck.gl</a> com os números fornecidos pelas secretarias de saúde dos estados,
-dados tratados e disponibilizados por <a href="https://brasil.io/">Brasil.io</a>.
-
-Malhas e outras informações disponibilizados pela <a href="https://servicodados.ibge.gov.br/">api do IBGE</a>.
+Geodata and other info are provided by <a href="https://servicodados.ibge.gov.br/">IBGE's api</a>.
 
 
-#### Contribuições são bem-vindas!
+#### Contributions are welcomed!
 
 
-#### Sobre mim
+#### About me
 
-Siga-me no twitter <a href="http://twitter.com/oniltonmaciel">Onilton Maciel</a> :)
+Follow me on twitter <a href="http://twitter.com/oniltonmaciel">Onilton Maciel</a> :)
 
-#### Outros
+#### Others
 
-##### Porque não usar React, Vue.js, tecnologia XYZ ?
+##### Why you didn't use React, Vue.js, framework XYZ ?
 
-A idéia era fazer algo que fosse rápido, fácil de entender, rodar e customizar. Sem npm, build, e etc. Mas isso pode mudar no futuro.
+The idea was to make something fast, easy to understand, run and customize. No npm, build, others. This mya change in the future.
 
-##### Não funciona no meu navegador!
+##### It doesn't work in my browser!
 
-Infelizmente, já que evitei ferramentas de build, alguns navegadores mais antigos não são suportados. Atualize seu navegador. Se você achar que não é o caso, abra um issue que darei uma olhada.
+Unfortunately, since I avoided build tools, some old browsers are not supported. Update your browser. If you think that is not the case, open an issue and I will look.
 
-##### Futuro?
+##### Future?
 
-Pensei em adicionar também alguma métrica contendo a previsão/projeção de crescimento para os próximos dias/meses. Falta achar e escolher um modelo de predição aberto e conhecido.
+Maybe I can add some metric that predicts the evolution for the next days/months. I need to find and choose an open prediction model.
