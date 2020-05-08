@@ -511,14 +511,19 @@ async function main() {
         if (object) {
             const data = infoByCityId[object.properties.codarea][0];
 
+            let confirmed_per_100k = data.last_available_confirmed_per_100k_inhabitants || 0;
+            confirmed_per_100k = parseFloat(confirmed_per_100k).toFixed(2)
+            let deaths_per_100k = data.deaths_per_100k || 0;
+            deaths_per_100k = parseFloat(deaths_per_100k).toFixed(2);
+
             return {
                 html: poorManTemplate(tooltipTmpl,
                     data.city,
                     data.state,
                     data.last_available_deaths || 0,
                     data.last_available_confirmed || 0,
-                    data.last_available_confirmed_per_100k_inhabitants || 0,
-                    data.deaths_per_100k || 0,
+                    confirmed_per_100k || 0,
+                    deaths_per_100k || 0,
                     data.last_available_date || '',
                     data.estimated_population_2019 || '',
                     logColorScale(data[colorMetric.name], maxMetricValue, true),
