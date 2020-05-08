@@ -1,6 +1,6 @@
- # Covid-19 in cities of Brasil using deck.gl
+ # Covid-19 nos municípios do Brasil usando deck.gl
 
-Uma visualização da evolução de casos de Covid-19 no Brasil usando deck.gl para o efeito 3D. Além disso várias opções são apresentadas para customizar a apresentação.
+Uma visualização da evolução de casos de Covid-19 no Brasil usando deck.gl para o efeito 3D. Além disso, várias opções são apresentadas para customizar a apresentação.
 
 #### Por quê?
 
