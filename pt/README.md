@@ -1,8 +1,11 @@
  # Covid-19 nos municípios do Brasil usando deck.gl
 
- <a href="../README.md">English version</a>
+<a href="../README.md">README in english</a>
 
 Uma visualização da evolução de casos de Covid-19 no Brasil usando deck.gl para o efeito 3D. Além disso, várias opções são apresentadas para customizar a apresentação.
+
+ <a href="https://onilton.github.io/deck-covid19/">Ir para visualização</a>
+
 
 #### Por quê?
 

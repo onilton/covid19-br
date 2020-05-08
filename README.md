@@ -1,8 +1,10 @@
  # Covid-19 in cities of Brasil using deck.gl
 
-<a href="./pt/README.md">Versão em Português</a>
+<a href="./pt/README.md">README em Português</a>
 
 A visualization of the evolution of cases of Covid-19 in Brazil using deck.gl for the 3D effect. There are also other options to customize the presentation.
+
+ <a href="https://onilton.github.io/deck-covid19/pt/">Ir para visualização</a>
 
 #### Why?
 
