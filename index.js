@@ -533,6 +533,4 @@ async function main() {
 
 }
 
-window.onload = function() {
-    main();
-}
+window.addEventListener("load", main, false);
